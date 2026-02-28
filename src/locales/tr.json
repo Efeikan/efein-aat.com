@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "services": "Hizmetlerimiz",
+    "gallery": "Galeri",
+    "testimonials": "Yorumlar",
+    "faq": "SSS",
+    "contact": "İletişim"
+  },
+  "hero": {
+    "title": "Yaşam Alanlarınızı",
+    "titleHighlight": "Dönüştürüyoruz",
+    "subtitle": "Pimapen, cam balkon, pergole ve sineklik sistemlerinde uzman çözümler. Modern tasarım ve kaliteli işçilikle mekanlarınıza değer katıyoruz.",
+    "cta": "Hizmetlerimizi Keşfedin",
+    "ctaSecondary": "Bize Ulaşın"
+  },
+  "about": {
+    "sectionTag": "Hakkımızda",
+    "title": "Güvenilir Çözüm Ortağınız",
+    "description": "Efe İnşaat olarak yılların deneyimiyle, yaşam ve çalışma alanlarınızı daha konforlu, estetik ve fonksiyonel hale getiriyoruz. Müşteri memnuniyetini her zaman ön planda tutarak, kaliteli malzeme ve uzman işçilikle hizmet veriyoruz.",
+    "features": [
+      {
+        "title": "Kaliteli Malzeme",
+        "description": "En kaliteli malzemelerle uzun ömürlü çözümler sunuyoruz."
+      },
+      {
+        "title": "Uzman Ekip",
+        "description": "Deneyimli ve profesyonel ekibimizle kusursuz işçilik garantisi."
+      },
+      {
+        "title": "Zamanında Teslimat",
+        "description": "Projelerinizi söz verilen sürede tamamlıyoruz."
+      },
+      {
+        "title": "Garanti",
+        "description": "Tüm işlerimizde uzun süreli garanti veriyoruz."
+      }
+    ]
+  },
+  "stats": {
+    "projects": "Tamamlanan Proje",
+    "customers": "Mutlu Müşteri",
+    "experience": "Yıllık Deneyim",
+    "cities": "Hizmet Alanı"
+  },
+  "services": {
+    "sectionTag": "Hizmetlerimiz",
+    "title": "Uzman Çözümlerimiz",
+    "subtitle": "İhtiyacınıza özel, kaliteli ve estetik çözümler sunuyoruz.",
+    "items": [
+      {
+        "title": "Pimapen",
+        "description": "Yüksek ısı ve ses yalıtımı sağlayan PVC pencere sistemleri. Enerji tasarrufu ve konfor bir arada.",
+        "features": ["Isı Yalıtımı", "Ses Yalıtımı", "Enerji Tasarrufu", "Kolay Bakım"]
+      },
+      {
+        "title": "Cam Balkon",
+        "description": "Balkonlarınızı dört mevsim kullanılabilir hale getiren şık ve fonksiyonel cam balkon sistemleri.",
+        "features": ["Katlanır Sistem", "Sürgülü Sistem", "Isıcamlı Seçenek", "Rüzgar Dayanımı"]
+      },
+      {
+        "title": "Pergole Sistemleri",
+        "description": "Bahçe ve teraslarınız için modern ve şık pergole çözümleri. Güneş ve yağmurdan korunma.",
+        "features": ["Biyoklimatik", "Motorlu Sistem", "Alüminyum Gövde", "Uzaktan Kumanda"]
+      },
+      {
+        "title": "Sineklik",
+        "description": "Pencere ve kapılarınız için özel ölçü sineklik sistemleri. Böceklere karşı etkili koruma.",
+        "features": ["Plise Sineklik", "Menteşeli Sineklik", "Sürgülü Sineklik", "Sabit Sineklik"]
+      }
+    ],
+    "learnMore": "Detaylı Bilgi"
+  },
+  "gallery": {
+    "sectionTag": "Galeri",
+    "title": "Projelerimizden Kareler",
+    "subtitle": "Tamamladığımız projelerden bazı örnekler."
+  },
+  "testimonials": {
+    "sectionTag": "Müşteri Yorumları",
+    "title": "Müşterilerimiz Ne Diyor?",
+    "subtitle": "Müşteri memnuniyeti bizim en büyük referansımız.",
+    "items": [
+      {
+        "name": "Ahmet Yılmaz",
+        "role": "Ev Sahibi",
+        "text": "Pimapen değişimi için Efe İnşaat'ı tercih ettik. Hem kaliteli malzeme hem de profesyonel işçilik. Çok memnunuz.",
+        "rating": 5
+      },
+      {
+        "name": "Fatma Demir",
+        "role": "İşletme Sahibi",
+        "text": "Cam balkon sistemimiz harika oldu. Kışın bile balkonumuzu rahatlıkla kullanabiliyoruz. Teşekkürler Efe İnşaat!",
+        "rating": 5
+      },
+      {
+        "name": "Mehmet Kaya",
+        "role": "Villa Sahibi",
+        "text": "Pergole sistemimiz tam istediğimiz gibi oldu. Biyoklimatik pergole sayesinde terasımız yaşam alanına dönüştü.",
+        "rating": 5
+      },
+      {
+        "name": "Ayşe Çelik",
+        "role": "Apartman Yöneticisi",
+        "text": "Tüm daire pencerelerine sineklik taktırdık. Ölçü alma ve montaj sürecinde çok titiz çalıştılar.",
+        "rating": 4
+      }
+    ]
+  },
+  "faq": {
+    "sectionTag": "Sıkça Sorulan Sorular",
+    "title": "Merak Edilenler",
+    "items": [
+      {
+        "question": "Pimapen pencerelerin ömrü ne kadardır?",
+        "answer": "Kaliteli PVC pencere sistemleri, doğru bakım ve kullanım koşullarında 25-30 yıl sorunsuz hizmet verebilir. Düzenli bakım yapıldığında bu süre daha da uzayabilir."
+      },
+      {
+        "question": "Cam balkon sistemleri kışın yeterli koruma sağlar mı?",
+        "answer": "Cam balkon sistemleri rüzgar, yağmur ve toza karşı etkili koruma sağlar. Isıcamlı seçeneklerle kış aylarında da balkonunuzu konforlu şekilde kullanabilirsiniz."
+      },
+      {
+        "question": "Biyoklimatik pergole nedir?",
+        "answer": "Biyoklimatik pergole, hareketli lamel yapısıyla güneş ışığı ve hava sirkülasyonunu kontrol etmenizi sağlayan akıllı bir gölgeleme sistemidir. Motorlu versiyonları uzaktan kumanda ile kontrol edilebilir."
+      },
+      {
+        "question": "Sineklik montajı ne kadar sürer?",
+        "answer": "Standart pencere sineklikleri için ölçü alma ve montaj genellikle aynı gün içinde tamamlanır. Kapı sineklikleri ve özel sistemler için süre değişebilir."
+      },
+      {
+        "question": "Ücretsiz keşif yapıyor musunuz?",
+        "answer": "Evet, tüm hizmetlerimiz için ücretsiz keşif ve fiyat teklifi sunuyoruz. Bize telefonla veya iletişim formu üzerinden ulaşabilirsiniz."
+      },
+      {
+        "question": "Garanti süresi ne kadardır?",
+        "answer": "Tüm ürün ve hizmetlerimizde minimum 2 yıl işçilik garantisi veriyoruz. Ürün garantileri markaya göre 5-10 yıl arasında değişmektedir."
+      }
+    ]
+  },
+  "contact": {
+    "sectionTag": "İletişim",
+    "title": "Bizimle İletişime Geçin",
+    "subtitle": "Sorularınız ve teklif talepleriniz için bize ulaşın.",
+    "form": {
+      "name": "Adınız Soyadınız",
+      "email": "E-posta Adresiniz",
+      "phone": "Telefon Numaranız",
+      "message": "Mesajınız",
+      "submit": "Mesaj Gönder",
+      "success": "Mesajınız başarıyla gönderildi!",
+      "namePlaceholder": "Adınızı girin",
+      "emailPlaceholder": "ornek@email.com",
+      "phonePlaceholder": "0555 555 55 55",
+      "messagePlaceholder": "Mesajınızı yazın..."
+    },
+    "info": {
+      "address": "Adres",
+      "addressValue": "Efe İnşaat, Ataşehir, İstanbul, Türkiye",
+      "phone": "Telefon",
+      "phoneValue": "+90 535 747 77 63",
+      "email": "E-posta",
+      "emailValue": "ikanakman@gmail.com",
+      "hours": "Çalışma Saatleri",
+      "hoursValue": "Pzt-Cmt: 08:00 - 18:00"
+    }
+  },
+  "footer": {
+    "description": "Pimapen, cam balkon, pergole ve sineklik sistemlerinde kaliteli ve güvenilir çözümler.",
+    "quickLinks": "Hızlı Linkler",
+    "contactInfo": "İletişim Bilgileri",
+    "rights": "Tüm hakları saklıdır."
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "gallery": "Gallery",
+    "testimonials": "Reviews",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Transform Your",
+    "titleHighlight": "Living Spaces",
+    "subtitle": "Expert solutions in PVC windows, glass balconies, pergola systems, and insect screens. Adding value to your spaces with modern design and quality craftsmanship.",
+    "cta": "Explore Our Services",
+    "ctaSecondary": "Contact Us"
+  },
+  "about": {
+    "sectionTag": "About Us",
+    "title": "Your Trusted Partner",
+    "description": "At Efe Construction, with years of experience, we make your living and working spaces more comfortable, aesthetic, and functional. We always prioritize customer satisfaction, providing quality materials and expert craftsmanship.",
+    "features": [
+      {
+        "title": "Quality Materials",
+        "description": "We provide long-lasting solutions with the highest quality materials."
+      },
+      {
+        "title": "Expert Team",
+        "description": "Flawless craftsmanship guaranteed by our experienced and professional team."
+      },
+      {
+        "title": "On-Time Delivery",
+        "description": "We complete your projects within the promised timeframe."
+      },
+      {
+        "title": "Warranty",
+        "description": "We provide long-term warranty on all our work."
+      }
+    ]
+  },
+  "stats": {
+    "projects": "Completed Projects",
+    "customers": "Happy Customers",
+    "experience": "Years Experience",
+    "cities": "Service Areas"
+  },
+  "services": {
+    "sectionTag": "Our Services",
+    "title": "Expert Solutions",
+    "subtitle": "We offer quality and aesthetic solutions tailored to your needs.",
+    "items": [
+      {
+        "title": "PVC Windows",
+        "description": "PVC window systems providing high thermal and sound insulation. Energy savings and comfort combined.",
+        "features": ["Thermal Insulation", "Sound Insulation", "Energy Savings", "Easy Maintenance"]
+      },
+      {
+        "title": "Glass Balcony",
+        "description": "Stylish and functional glass balcony systems that make your balconies usable in all four seasons.",
+        "features": ["Folding System", "Sliding System", "Double Glazed Option", "Wind Resistance"]
+      },
+      {
+        "title": "Pergola Systems",
+        "description": "Modern and elegant pergola solutions for your gardens and terraces. Protection from sun and rain.",
+        "features": ["Bioclimatic", "Motorized System", "Aluminum Body", "Remote Control"]
+      },
+      {
+        "title": "Insect Screens",
+        "description": "Custom-sized insect screen systems for your windows and doors. Effective protection against insects.",
+        "features": ["Pleated Screen", "Hinged Screen", "Sliding Screen", "Fixed Screen"]
+      }
+    ],
+    "learnMore": "Learn More"
+  },
+  "gallery": {
+    "sectionTag": "Gallery",
+    "title": "Our Project Showcase",
+    "subtitle": "Some examples from our completed projects."
+  },
+  "testimonials": {
+    "sectionTag": "Testimonials",
+    "title": "What Our Clients Say",
+    "subtitle": "Customer satisfaction is our greatest reference.",
+    "items": [
+      {
+        "name": "Ahmet Yilmaz",
+        "role": "Homeowner",
+        "text": "We chose Efe Construction for our PVC window replacement. Both quality materials and professional craftsmanship. Very satisfied.",
+        "rating": 5
+      },
+      {
+        "name": "Fatma Demir",
+        "role": "Business Owner",
+        "text": "Our glass balcony system turned out amazing. We can comfortably use our balcony even in winter. Thanks Efe Construction!",
+        "rating": 5
+      },
+      {
+        "name": "Mehmet Kaya",
+        "role": "Villa Owner",
+        "text": "Our pergola system turned out exactly as we wanted. Thanks to the bioclimatic pergola, our terrace has become a living space.",
+        "rating": 5
+      },
+      {
+        "name": "Ayse Celik",
+        "role": "Apartment Manager",
+        "text": "We had insect screens installed on all apartment windows. They were very meticulous during measurement and installation.",
+        "rating": 4
+      }
+    ]
+  },
+  "faq": {
+    "sectionTag": "FAQ",
+    "title": "Frequently Asked Questions",
+    "items": [
+      {
+        "question": "How long do PVC windows last?",
+        "answer": "Quality PVC window systems can serve trouble-free for 25-30 years under proper care and usage conditions. This period can be extended even further with regular maintenance."
+      },
+      {
+        "question": "Do glass balcony systems provide adequate protection in winter?",
+        "answer": "Glass balcony systems provide effective protection against wind, rain, and dust. With double-glazed options, you can comfortably use your balcony during winter months as well."
+      },
+      {
+        "question": "What is a bioclimatic pergola?",
+        "answer": "A bioclimatic pergola is a smart shading system that allows you to control sunlight and air circulation with its movable louver structure. Motorized versions can be controlled with a remote."
+      },
+      {
+        "question": "How long does insect screen installation take?",
+        "answer": "For standard window insect screens, measurement and installation are usually completed within the same day. Time may vary for door screens and special systems."
+      },
+      {
+        "question": "Do you provide free site inspection?",
+        "answer": "Yes, we offer free site inspection and price quotation for all our services. You can reach us by phone or through the contact form."
+      },
+      {
+        "question": "What is the warranty period?",
+        "answer": "We provide a minimum 2-year workmanship warranty on all our products and services. Product warranties range from 5-10 years depending on the brand."
+      }
+    ]
+  },
+  "contact": {
+    "sectionTag": "Contact",
+    "title": "Get in Touch",
+    "subtitle": "Reach out for questions and quote requests.",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "message": "Your Message",
+      "submit": "Send Message",
+      "success": "Your message has been sent successfully!",
+      "namePlaceholder": "Enter your name",
+      "emailPlaceholder": "example@email.com",
+      "phonePlaceholder": "+1 555 555 5555",
+      "messagePlaceholder": "Write your message..."
+    },
+    "info": {
+      "address": "Address",
+      "addressValue": "Efe Construction, Atasehir, Istanbul, Turkey",
+      "phone": "Phone",
+      "phoneValue": "+90 535 747 77 63",
+      "email": "Email",
+      "emailValue": "ikanakman@gmail.com",
+      "hours": "Working Hours",
+      "hoursValue": "Mon-Sat: 08:00 - 18:00"
+    }
+  },
+  "footer": {
+    "description": "Quality and reliable solutions in PVC windows, glass balconies, pergola, and insect screen systems.",
+    "quickLinks": "Quick Links",
+    "contactInfo": "Contact Info",
+    "rights": "All rights reserved."
+  }
+}
