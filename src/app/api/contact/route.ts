@@ -1,31 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
-    try {
-        const { name, email, phone, message } = await req.json();
+  try {
+    const { name, email, phone, message } = await req.json();
 
-        if (!name || !email || !message) {
-            return NextResponse.json(
-                { error: "Lütfen tüm zorunlu alanları doldurun." },
-                { status: 400 }
-            );
-        }
+    if (!name || !email || !message) {
+      return NextResponse.json(
+        { error: "Lütfen tüm zorunlu alanları doldurun." },
+        { status: 400 }
+      );
+    }
 
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
-        });
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-        await transporter.sendMail({
-            from: `"Efe İnşaat Web Formu" <${process.env.GMAIL_USER}>`,
-            to: process.env.GMAIL_USER,
-            replyTo: email,
-            subject: `🏗️ Yeni İletişim Formu - ${name}`,
-            html: `
+    await resend.emails.send({
+      from: "Efe İnşaat Web Formu <onboarding@resend.dev>",
+      to: "efe.ikan2005@gmail.com",
+      replyTo: email,
+      subject: `🏗️ Yeni İletişim Formu - ${name}`,
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9;">
           <div style="background: #f59e0b; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
             <h1 style="color: white; margin: 0; font-size: 22px;">🏗️ Efe İnşaat - Yeni Mesaj</h1>
@@ -58,14 +54,14 @@ export async function POST(req: NextRequest) {
           </div>
         </div>
       `,
-        });
+    });
 
-        return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error("Mail gönderme hatası:", error);
-        return NextResponse.json(
-            { error: "Mail gönderilemedi. Lütfen daha sonra tekrar deneyin." },
-            { status: 500 }
-        );
-    }
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Mail gönderme hatası:", error);
+    return NextResponse.json(
+      { error: "Mail gönderilemedi. Lütfen daha sonra tekrar deneyin." },
+      { status: 500 }
+    );
+  }
 }
