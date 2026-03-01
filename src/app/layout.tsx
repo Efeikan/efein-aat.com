@@ -15,9 +15,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Efe İnşaat | Pimapen, Cam Balkon, Pergole, Sineklik",
+  metadataBase: new URL("https://efeinsaat.com"),
+  title: "Efe İnşaat | Güvenilir Yapı, İnşaat ve Tadilat Hizmetleri",
   description:
-    "Efe İnşaat - Pimapen, cam balkon, pergole sistemleri ve sineklik çözümleri. Kaliteli malzeme ve uzman işçilikle yaşam alanlarınızı dönüştürüyoruz.",
+    "Efe İnşaat olarak anahtar teslim inşaat, mimari proje ve tadilat hizmetleri sunuyoruz. Modern, sağlam ve güvenilir yapılar için doğru adres.",
+  keywords: ["efe inşaat", "efeinsaat", "inşaat firması", "tadilat", "mimari proje", "anahtar teslim yapı"],
+  openGraph: {
+    title: "Efe İnşaat | Güvenilir Yapı, İnşaat ve Tadilat Hizmetleri",
+    description:
+      "Efe İnşaat olarak anahtar teslim inşaat, mimari proje ve tadilat hizmetleri sunuyoruz. Modern, sağlam ve güvenilir yapılar için doğru adres.",
+    url: "https://efeinsaat.com",
+    siteName: "Efe İnşaat",
+    locale: "tr_TR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
