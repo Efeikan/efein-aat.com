@@ -99,7 +99,12 @@ export const metadata: Metadata = {
     images: ["/opengraph-image"],
   },
   icons: {
-    icon: [{ url: "/favicon.ico" }],
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     shortcut: ["/favicon.ico"],
   },
   manifest: "/manifest.webmanifest",
@@ -127,7 +132,7 @@ const jsonLd = {
       name: SITE_NAME,
       alternateName: ["Efe İnşaat", "EfeInsaat", "Efe İnşaat Ataşehir"],
       url: SITE_URL,
-      logo: `${SITE_URL}/favicon.ico`,
+      logo: `${SITE_URL}/icon-512.png`,
       image: `${SITE_URL}/opengraph-image`,
       description: DESCRIPTION,
       telephone: "+905357477763",
