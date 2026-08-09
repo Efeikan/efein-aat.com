@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Soft sage / mist green palette */
+  --color-primary-50: #f2f7f5;
+  --color-primary-100: #e0ebe6;
+  --color-primary-200: #c2d7ce;
+  --color-primary-300: #9bbcb0;
+  --color-primary-400: #6f9a8c;
+  --color-primary-500: #557f72;
+  --color-primary-600: #43665c;
+  --color-primary-700: #37524b;
+  --color-primary-800: #2f433e;
+  --color-primary-900: #283834;
+
+  /* Corporate charcoal / ink palette for bold, Kiewit-style dark bands */
+  --color-ink-950: #08100e;
+  --color-ink-900: #0e1a17;
+  --color-ink-800: #16241f;
+  --color-ink-700: #1f322b;
+  --color-ink-600: #2b4038;
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+:root {
+  --bg-primary: #121816;
+  --bg-secondary: #1a221f;
+  --bg-card: #1a221f;
+  --text-primary: #eef3f0;
+  --text-secondary: #9bb0a8;
+  --border-color: #2a3631;
+}
+
+::selection {
+  background-color: #557f72;
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9bbcb0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6f9a8c;
+}
