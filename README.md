@@ -1,16 +1,29 @@
-# Efe İnşaat Web Sitesi
+# Efe İnşaat
 
-Bu proje [Next.js](https://nextjs.org) ile oluşturulmuştur.
+Kurumsal web sitesi — Ataşehir / İstanbul.
 
-## Geliştirme Sunucusunu Başlatma
+**Hizmetler:** Pimapen (PVC pencere) · Cam balkon · Pergole · Sineklik
+
+[Canlı site](https://efe-insaat.efe-ikan2005.workers.dev) · [GitHub](https://github.com/Efeikan/efein-aat.com)
+
+---
+
+## Hakkında
+
+Efe İnşaat için modern, hızlı ve SEO uyumlu bir tanıtım sitesi. Dark mode arayüz, Türkçe / İngilizce dil desteği, iletişim formu ve proje galerisi içerir.
+
+## Teknolojiler
+
+- [Next.js](https://nextjs.org) 16 (App Router)
+- React 19
+- Tailwind CSS 4
+- Framer Motion
+- Cloudflare Workers (OpenNext)
+
+## Kurulum
 
 ```bash
+git clone https://github.com/Efeikan/efein-aat.com.git
+cd efein-aat.com
+npm install
 npm run dev
-```
-
-Tarayıcında [http://localhost:3000](http://localhost:3000) adresini aç.
-
-## Daha Fazla Bilgi
-
-- [Next.js Belgeleri](https://nextjs.org/docs)
-- [Next.js Öğren](https://nextjs.org/learn)
