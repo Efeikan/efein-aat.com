@@ -4,6 +4,7 @@ import {
   DISPLAY_EMAIL,
   escapeHtml,
   sendMail,
+  toClientMailError,
 } from "@/lib/mail";
 
 export const runtime = "nodejs";
@@ -316,12 +317,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Teklif formu hatası:", error);
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Teklif talebi gönderilemedi. Lütfen daha sonra tekrar deneyin.",
-      },
+      { error: toClientMailError(error) },
       { status: 500 }
     );
   }

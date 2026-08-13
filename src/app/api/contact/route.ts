@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CONTACT_EMAIL, escapeHtml, sendMail } from "@/lib/mail";
+import {
+  CONTACT_EMAIL,
+  escapeHtml,
+  sendMail,
+  toClientMailError,
+} from "@/lib/mail";
 
 export const runtime = "nodejs";
 
@@ -159,12 +164,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Mail gönderme hatası:", error);
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Mail gönderilemedi. Lütfen daha sonra tekrar deneyin.",
-      },
+      { error: toClientMailError(error) },
       { status: 500 }
     );
   }
