@@ -205,9 +205,13 @@ async function sendViaFormSubmit(options: SendMailOptions) {
   if (options.attachments?.length) {
     for (const file of options.attachments) {
       const bytes = Buffer.isBuffer(file.content)
-        ? new Uint8Array(file.content)
-        : file.content;
-      body.append("attachment", new Blob([bytes]), file.filename);
+        ? file.content
+        : Buffer.from(file.content);
+      body.append(
+        "attachment",
+        new Blob([Uint8Array.from(bytes)]),
+        file.filename
+      );
     }
   }
 
