@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CONTACT_EMAIL, escapeHtml, sendMail } from "@/lib/mail";
+import {
+  CONTACT_EMAIL,
+  DISPLAY_EMAIL,
+  escapeHtml,
+  sendMail,
+} from "@/lib/mail";
 
 export const runtime = "nodejs";
 
 const SITE_URL = "https://efeinsaat.com";
-const DISPLAY_EMAIL = "info@efeinşaat.com";
 
 function buildQuoteEmailHtml(fields: Record<string, string>, fileName?: string) {
   const rows = [
@@ -280,7 +284,7 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    // 1) Yönetici bildirimi
+    // Yönetici bildirimi + müşteri onay (SMTP’de 2 mail, Workers’ta FormSubmit + autoresponse)
     await sendMail({
       subject: `Yeni Teklif Talebi - ${fields.name}`,
       replyTo: fields.email,
@@ -288,16 +292,24 @@ export async function POST(req: NextRequest) {
       text: Object.entries(fields)
         .map(([k, v]) => `${k}: ${v}`)
         .join("\n"),
+      fields: {
+        projectType: fields.projectType,
+        location: fields.location,
+        area: fields.area,
+        deedStatus: fields.deedStatus,
+        name: fields.name,
+        phone: fields.phone,
+        email: fields.email,
+        notes: fields.notes || "Belirtilmedi",
+        file: attachment?.filename || "Yüklenmedi",
+      },
       attachments: attachment ? [attachment] : undefined,
-    });
-
-    // 2) Müşteri onay / teşekkür (auto-responder)
-    await sendMail({
-      to: fields.email,
-      subject: "Teklif Talebiniz Alındı | Efe İnşaat",
-      replyTo: DISPLAY_EMAIL,
-      html: buildCustomerConfirmationHtml(fields),
-      text: buildCustomerConfirmationText(fields),
+      customerConfirmation: {
+        to: fields.email,
+        subject: "Teklif Talebiniz Alındı | Efe İnşaat",
+        html: buildCustomerConfirmationHtml(fields),
+        text: buildCustomerConfirmationText(fields),
+      },
     });
 
     return NextResponse.json({ success: true });

@@ -4,23 +4,34 @@ import { domainToASCII } from "node:url";
 export const CONTACT_EMAIL =
   process.env.CONTACT_EMAIL?.trim() || "info@xn--efeinaat-rwb.com";
 
+/** FormSubmit / görünür iletişim adresi */
+export const DISPLAY_EMAIL = "info@efeinşaat.com";
+
 type Attachment = {
   filename: string;
   content: Buffer | Uint8Array;
 };
 
+type CustomerConfirmation = {
+  to: string;
+  subject: string;
+  html: string;
+  text: string;
+};
+
 type SendMailOptions = {
   subject: string;
   html: string;
-  /** Varsayılan: CONTACT_EMAIL. Müşteri onay maili için müşteri adresi verin. */
+  /** Varsayılan: CONTACT_EMAIL */
   to?: string;
   replyTo?: string;
   text?: string;
   fields?: Record<string, string>;
   attachments?: Attachment[];
+  /** FormSubmit yolunda _autoresponse; SMTP yolunda ayrı mail */
+  customerConfirmation?: CustomerConfirmation;
 };
 
-/** IDN alan adını Punycode ASCII'ye çevirir (efeinşaat.com → xn--efeinaat-rwb.com). */
 function toPunycodeEmail(email: string) {
   const at = email.lastIndexOf("@");
   if (at < 0) return email;
@@ -54,6 +65,22 @@ function isAuthError(error: unknown) {
   return /535|Invalid login|authentication failed|EAUTH/i.test(message);
 }
 
+/** Cloudflare Workers: SMTP TCP yok → proxy/connect hataları */
+function isConnectError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  return /proxy request failed|cannot connect|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|socket|network|fetch failed|ConnectTimeout/i.test(
+    message
+  );
+}
+
+/** OpenNext / workerd ortamı */
+function isCloudflareWorker() {
+  return (
+    typeof (globalThis as { WebSocketPair?: unknown }).WebSocketPair !==
+      "undefined" || process.env.MAIL_TRANSPORT === "http"
+  );
+}
+
 function requireSmtpConfig() {
   const host = process.env.SMTP_HOST?.trim() || "smtp.hostinger.com";
   const port = Number(process.env.SMTP_PORT || "465");
@@ -66,7 +93,6 @@ function requireSmtpConfig() {
     );
   }
 
-  // Kullanıcı adı adayları: ş'li → Punycode → ASCII → bilinen alternatif Punycode
   const userCandidates = uniqueEmails([
     rawUser,
     toPunycodeEmail(rawUser),
@@ -94,35 +120,23 @@ function createTransport(host: string, port: number, user: string, pass: string)
     requireTLS: port === 587,
     auth: { user, pass },
     tls: { minVersion: "TLSv1.2" },
-    connectionTimeout: 20000,
+    connectionTimeout: 15000,
   });
 }
 
-/**
- * Hostinger SMTP ile mail gönderir.
- * Auth 535 olursa alternatif kullanıcı adı biçimlerini sırayla dener.
- */
-export async function sendMail({
-  subject,
-  html,
-  to: toOverride,
-  replyTo,
-  text,
-  attachments,
-}: SendMailOptions) {
+async function sendViaSmtp(options: SendMailOptions) {
   const { host, port, pass, userCandidates, toCandidates } = requireSmtpConfig();
-  const to = toOverride?.trim() || toCandidates[0];
+  const to = options.to?.trim() || toCandidates[0];
 
   const mailOptions = (user: string) => ({
     from: `"Efe İnşaat" <${user}>`,
     to,
-    replyTo,
-    subject,
-    html,
-    text,
-    // Türkçe karakterler için UTF-8
+    replyTo: options.replyTo,
+    subject: options.subject,
+    html: options.html,
+    text: options.text,
     encoding: "utf-8" as const,
-    attachments: attachments?.map((file) => ({
+    attachments: options.attachments?.map((file) => ({
       filename: file.filename,
       content: Buffer.isBuffer(file.content)
         ? file.content
@@ -132,26 +146,17 @@ export async function sendMail({
 
   let lastError: unknown;
 
-  for (const user of userCandidates) {
-    const transporter = createTransport(host, port, user, pass);
+  const tryPorts = port === 465 ? [465, 587] : [port];
 
-    try {
-      await transporter.sendMail(mailOptions(user));
-      return;
-    } catch (error) {
-      lastError = error;
-      if (!isAuthError(error)) throw error;
-    }
-  }
-
-  if (port === 465) {
+  for (const p of tryPorts) {
     for (const user of userCandidates) {
-      const transporter = createTransport(host, 587, user, pass);
+      const transporter = createTransport(host, p, user, pass);
       try {
         await transporter.sendMail(mailOptions(user));
-        return;
+        return user;
       } catch (error) {
         lastError = error;
+        if (isConnectError(error)) throw error;
         if (!isAuthError(error)) throw error;
       }
     }
@@ -160,6 +165,122 @@ export async function sendMail({
   throw lastError instanceof Error
     ? lastError
     : new Error("SMTP kimlik doğrulama başarısız.");
+}
+
+/**
+ * Cloudflare Workers uyumlu HTTP yolu.
+ * Alıcı Hostinger kutusu (FormSubmit → info@…).
+ */
+async function sendViaFormSubmit(options: SendMailOptions) {
+  // Yönetici adresi: FormSubmit için ASCII daha sorunsuz
+  const to =
+    options.to?.trim() ||
+    "info@efeinsaat.com";
+
+  const body = new FormData();
+  body.append("_subject", options.subject);
+  body.append("_template", "table");
+  body.append("_captcha", "false");
+  body.append("_honey", "");
+
+  if (options.replyTo) {
+    body.append("_replyto", options.replyTo);
+    body.append("email", options.replyTo);
+  }
+
+  if (options.fields) {
+    for (const [key, value] of Object.entries(options.fields)) {
+      if (value) body.append(key, value);
+    }
+  }
+
+  if (options.text) body.append("message", options.text);
+  if (options.html) body.append("html_content", options.html);
+
+  // Müşteriye otomatik yanıt (FormSubmit; alıcı formdaki email alanı)
+  if (options.customerConfirmation?.text) {
+    body.append("_autoresponse", options.customerConfirmation.text);
+  }
+
+  if (options.attachments?.length) {
+    for (const file of options.attachments) {
+      const bytes = Buffer.isBuffer(file.content)
+        ? new Uint8Array(file.content)
+        : file.content;
+      body.append("attachment", new Blob([bytes]), file.filename);
+    }
+  }
+
+  const response = await fetch(
+    `https://formsubmit.co/ajax/${encodeURIComponent(to)}`,
+    {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body,
+    }
+  );
+
+  const payload = (await response.json().catch(() => null)) as {
+    success?: string | boolean;
+    message?: string;
+    error?: string;
+  } | null;
+
+  const ok =
+    response.ok &&
+    (payload?.success === true ||
+      payload?.success === "true" ||
+      payload?.success === "ok");
+
+  if (!ok) {
+    throw new Error(
+      payload?.message ||
+        payload?.error ||
+        `Mail sunucusu yanıt vermedi (${response.status})`
+    );
+  }
+}
+
+/**
+ * Önce SMTP (lokal Node), Cloudflare Workers’ta veya bağlantı hatasında HTTP (FormSubmit).
+ */
+export async function sendMail(options: SendMailOptions) {
+  const forceHttp =
+    isCloudflareWorker() || process.env.MAIL_TRANSPORT === "http";
+
+  if (!forceHttp && process.env.SMTP_PASS) {
+    try {
+      await sendViaSmtp({
+        ...options,
+        to: options.to,
+      });
+
+      // Müşteri onay maili (SMTP)
+      if (options.customerConfirmation && !options.to) {
+        await sendViaSmtp({
+          to: options.customerConfirmation.to,
+          subject: options.customerConfirmation.subject,
+          html: options.customerConfirmation.html,
+          text: options.customerConfirmation.text,
+          replyTo: DISPLAY_EMAIL,
+        });
+      }
+      return;
+    } catch (error) {
+      if (!isConnectError(error) && !isAuthError(error)) throw error;
+      // Workers / ağ: HTTP’ye düş
+      console.warn("SMTP başarısız, FormSubmit kullanılıyor:", error);
+    }
+  }
+
+  // Yöneticiye (veya to override) HTTP
+  await sendViaFormSubmit({
+    ...options,
+    // Müşteriye ayrı to ile FormSubmit istenmez (aktivasyon gerekir);
+    // customerConfirmation → _autoresponse
+    to: options.to && options.customerConfirmation ? undefined : options.to,
+    customerConfirmation: options.customerConfirmation,
+  });
 }
 
 export function escapeHtml(value: string) {
