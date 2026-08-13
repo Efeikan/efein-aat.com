@@ -9,7 +9,8 @@ import {
 
 export const runtime = "nodejs";
 
-const SITE_URL = "https://efeinsaat.com";
+const SITE_URL = "https://xn--efeinaat-rwb.com";
+const SITE_DISPLAY = "efeinşaat.com";
 
 function buildQuoteEmailHtml(fields: Record<string, string>, fileName?: string) {
   const rows = [
@@ -51,7 +52,8 @@ function buildQuoteEmailHtml(fields: Record<string, string>, fileName?: string) 
       <table width="100%" cellpadding="0" cellspacing="0">${tableRows}</table>
     </td></tr>
     <tr><td style="padding:16px 28px 24px;font-size:12px;color:#9bb0a8;">
-      Alıcı: ${escapeHtml(CONTACT_EMAIL)}
+      Alıcı: ${escapeHtml(CONTACT_EMAIL)} ·
+      <a href="${SITE_URL}" style="color:#557f72;text-decoration:none;">${SITE_DISPLAY}</a>
     </td></tr>
   </table>
 </body>
@@ -167,7 +169,7 @@ function buildCustomerConfirmationHtml(fields: Record<string, string>) {
                 <tr>
                   <td style="font-size:13px;line-height:1.7;color:#557f72;">
                     <a href="mailto:${DISPLAY_EMAIL}" style="color:#557f72;text-decoration:none;">${DISPLAY_EMAIL}</a><br />
-                    <a href="${SITE_URL}" style="color:#557f72;text-decoration:none;">${SITE_URL.replace("https://", "")}</a>
+                    <a href="${SITE_URL}" style="color:#557f72;text-decoration:none;">${SITE_DISPLAY}</a>
                   </td>
                 </tr>
                 <tr>
@@ -206,7 +208,7 @@ ${fields.notes ? `- Not: ${fields.notes}` : ""}
 
 Efe İnşaat
 ${DISPLAY_EMAIL}
-${SITE_URL}
+${SITE_DISPLAY}
 `;
 }
 

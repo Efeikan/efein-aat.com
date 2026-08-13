@@ -101,7 +101,7 @@ function buildEmailHtml(name: string, email: string, phone: string, message: str
               <td style="padding: 20px 32px 28px 32px;">
                 <p style="margin: 16px 0 0 0; font-size: 12px; color: #9bb0a8; border-top: 1px solid #e0ebe6; padding-top: 16px;">
                   Gönderim tarihi: <strong style="color: #5a6b64;">${submittedAt}</strong><br>
-                  Bu e-posta efeinşaat.com iletişim formundan otomatik oluşturulmuştur.
+                  Bu e-posta <a href="https://xn--efeinaat-rwb.com" style="color:#557f72;text-decoration:none;">efeinşaat.com</a> iletişim formundan otomatik oluşturulmuştur.
                 </p>
               </td>
             </tr>
@@ -110,7 +110,7 @@ function buildEmailHtml(name: string, email: string, phone: string, message: str
             </tr>
           </table>
           <p style="max-width: 600px; margin: 18px 0 0 0; font-size: 11px; color: #9bb0a8; text-align: center;">
-            Efe İnşaat &middot; Ataşehir, İstanbul &middot; ${CONTACT_EMAIL}
+            Efe İnşaat &middot; Ataşehir, İstanbul &middot; <a href="https://xn--efeinaat-rwb.com" style="color:#557f72;text-decoration:none;">efeinşaat.com</a>
           </p>
         </td>
       </tr>
