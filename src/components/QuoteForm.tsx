@@ -106,7 +106,8 @@ export default function QuoteForm() {
       return;
     }
     if (type === "checkbox" && e.target instanceof HTMLInputElement) {
-      setForm((prev) => ({ ...prev, kvkk: e.target.checked }));
+      const checked = e.target.checked;
+      setForm((prev) => ({ ...prev, kvkk: checked }));
       return;
     }
     setForm((prev) => ({ ...prev, [name]: value }));
