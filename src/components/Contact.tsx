@@ -2,7 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import { MapPin, Mail, Clock, Send, CheckCircle } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Contact() {
@@ -63,16 +63,10 @@ export default function Contact() {
       href: undefined as string | undefined,
     },
     {
-      icon: Phone,
-      label: t("contact.info.phone") as string,
-      value: t("contact.info.phoneValue") as string,
-      href: "tel:+905357477763",
-    },
-    {
       icon: Mail,
       label: t("contact.info.email") as string,
       value: t("contact.info.emailValue") as string,
-      href: "mailto:efe.ikan2005@gmail.com",
+      href: "mailto:info@efeinşaat.com",
     },
     {
       icon: Clock,

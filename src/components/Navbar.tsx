@@ -1,25 +1,28 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Building2, Phone } from "lucide-react";
+import { Menu, X, Building2, Mail } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageToggle from "./LanguageToggle";
 
 const navLinks = [
-  { key: "home", href: "#hero" },
-  { key: "about", href: "#about" },
-  { key: "services", href: "#services" },
-  { key: "gallery", href: "#gallery" },
-  { key: "testimonials", href: "#testimonials" },
-  { key: "faq", href: "#faq" },
-  { key: "contact", href: "#contact" },
+  { key: "home", href: "/#hero" },
+  { key: "about", href: "/hakkimizda" },
+  { key: "services", href: "/hizmetlerimiz" },
+  { key: "gallery", href: "/#gallery" },
+  { key: "testimonials", href: "/#testimonials" },
+  { key: "faq", href: "/#faq" },
+  { key: "contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { t } = useLanguage();
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -27,10 +30,36 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleClick = (href: string) => {
+  const navigate = (href: string) => {
     setIsOpen(false);
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
+
+    if (href.startsWith("/#") || href.startsWith("#")) {
+      const hash = href.includes("#") ? `#${href.split("#")[1]}` : href;
+      if (pathname !== "/") {
+        window.location.assign(`/${hash}`);
+        return;
+      }
+      document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+
+    router.push(href);
+    // Sayfa değişiminde üste al (hash'li iç linkler hariç)
+    if (!href.includes("#")) {
+      const html = document.documentElement;
+      const previous = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
+      const jump = () => {
+        window.scrollTo(0, 0);
+        html.scrollTop = 0;
+      };
+      jump();
+      requestAnimationFrame(jump);
+      window.setTimeout(() => {
+        jump();
+        html.style.scrollBehavior = previous;
+      }, 50);
+    }
   };
 
   return (
@@ -40,13 +69,9 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-9 text-xs">
             <div className="flex items-center gap-4">
-              <a href="tel:+905357477763" className="flex items-center gap-1.5 hover:text-primary-300 transition-colors">
-                <Phone className="w-3 h-3" />
-                <span className="hidden sm:inline">+90 535 747 77 63</span>
-              </a>
-              <span className="hidden md:inline text-primary-400/70">|</span>
-              <a href="mailto:efe.ikan2005@gmail.com" className="hidden md:inline text-primary-100/80 hover:text-primary-300 transition-colors">
-                efe.ikan2005@gmail.com
+              <a href="mailto:info@efeinşaat.com" className="flex items-center gap-1.5 hover:text-primary-300 transition-colors">
+                <Mail className="w-3 h-3" />
+                <span className="hidden sm:inline">info@efeinşaat.com</span>
               </a>
             </div>
             <div className="flex items-center gap-2">
@@ -70,10 +95,10 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 lg:h-16">
             <a
-              href="#hero"
+              href="/#hero"
               onClick={(e) => {
                 e.preventDefault();
-                handleClick("#hero");
+                navigate("/#hero");
               }}
               className="flex items-center gap-2.5 group"
             >
@@ -100,7 +125,7 @@ export default function Navbar() {
                   href={link.href}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleClick(link.href);
+                    navigate(link.href);
                   }}
                   className="px-3.5 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)] hover:text-primary-400 transition-colors rounded-md hover:bg-primary-900/10"
                 >
@@ -111,10 +136,10 @@ export default function Navbar() {
 
             <div className="flex items-center gap-3">
               <a
-                href="#contact"
+                href="/#contact"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleClick("#contact");
+                  navigate("/#contact");
                 }}
                 className="hidden sm:inline-flex items-center gap-2 px-5 py-2 bg-primary-600 text-white text-xs font-semibold uppercase tracking-wide rounded-md hover:bg-primary-700 transition-all shadow-sm hover:shadow-md"
               >
@@ -147,7 +172,7 @@ export default function Navbar() {
                     href={link.href}
                     onClick={(e) => {
                       e.preventDefault();
-                      handleClick(link.href);
+                      navigate(link.href);
                     }}
                     className="block px-4 py-2.5 text-base font-medium text-[var(--text-secondary)] hover:text-primary-400 hover:bg-primary-900/10 rounded-lg transition-colors"
                   >

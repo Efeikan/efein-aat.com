@@ -22,27 +22,90 @@
     }
   },
   "about": {
-    "sectionTag": "About Us",
-    "title": "Your Trusted Partner",
-    "description": "At Efe Construction, with years of experience, we make your living and working spaces more comfortable, aesthetic, and functional. We always prioritize customer satisfaction, providing quality materials and expert craftsmanship.",
-    "features": [
+    "sectionTag": "Our Story",
+    "title": "Efe İnşaat: A Success Story Built on Trust",
+    "intro": "Rooted in quality and reliability, Efe İnşaat does more than build—we craft lasting living spaces. Across Ataşehir and Istanbul we deliver PVC windows, glass balconies, pergolas, and insect-screen solutions with clear communication, professional workmanship, and a promise we stand behind.",
+    "heroImageAlt": "Efe İnşaat residential and facade projects",
+    "valuesTitle": "The Values That Define Us",
+    "valuesSubtitle": "The same standard on every project: engineering discipline, on-time delivery, and a design language built for the future.",
+    "values": [
       {
-        "title": "Quality Materials",
-        "description": "We provide long-lasting solutions with the highest quality materials."
+        "title": "Excellence in Engineering",
+        "description": "From measurement to installation, every step is planned with technical precision—detail is where quality lives."
       },
       {
-        "title": "Expert Team",
-        "description": "Flawless craftsmanship guaranteed by our experienced and professional team."
+        "title": "On-Time, Safe Delivery",
+        "description": "We honor project schedules and keep site safety and discipline at the center of the process."
       },
       {
-        "title": "On-Time Delivery",
-        "description": "We complete your projects within the promised timeframe."
-      },
-      {
-        "title": "Warranty",
-        "description": "We provide long-term warranty on all our work."
+        "title": "Modern & Sustainable Design",
+        "description": "With energy-efficient systems and current material technologies, we deliver solutions that are both beautiful and durable."
       }
-    ]
+    ],
+    "storyLabel": "Our Journey",
+    "storyTitle": "From structure to finish—the same care",
+    "storyParagraphs": [
+      "What began as carefully executed installations grew into a reputation for trust. From **residential homes to commercial buildings**, renovations to custom designs, we keep one principle: the right materials, the right craftsmanship, the right conversation.",
+      "Across PVC windows, glass balconies, bioclimatic pergolas, and plissé screens, **customer satisfaction** must last beyond handover—into years of daily use. That is why every installation is judged by long-term performance.",
+      "By combining innovative construction technologies with field experience, we simplify the journey—with transparent proposals and a **free site survey** that makes decisions easier. For us, success is not square meters completed; it is a partnership people recommend with confidence."
+    ],
+    "quote": "Trust is not a slogan—it is a responsibility earned again with every measurement and every install.",
+    "sideImageAlt1": "Commercial facade and window applications",
+    "sideImageAlt2": "Modern pergola and outdoor living solutions",
+    "statsLabel": "Efe İnşaat in Numbers",
+    "ctaTitle": "Let's Build Your Dream Project Together",
+    "ctaDescription": "Send us a survey request—we'll return with a tailored solution and a clear proposal.",
+    "ctaButton": "Go to Quote Form"
+  },
+  "quote": {
+    "sectionTag": "Quote Form",
+    "title": "Get a Proposal for Your Project",
+    "subtitle": "Share a few details about your land, building, or transformation project—the Efe İnşaat team will get back to you shortly.",
+    "projectType": "Project Type",
+    "location": "Location (City / District)",
+    "area": "Land / Building m²",
+    "deedStatus": "Title Deed Status",
+    "name": "Full Name",
+    "phone": "Phone",
+    "email": "Email",
+    "notes": "Additional Notes",
+    "file": "File / Deed Upload (optional)",
+    "fileHint": "PDF, JPG or PNG — max 5 MB",
+    "removeFile": "Remove file",
+    "kvkk": "I consent to the processing of my personal data under KVKK for the proposal process.",
+    "submit": "Submit Quote Request",
+    "sending": "Sending...",
+    "selectPlaceholder": "Select",
+    "locationPlaceholder": "e.g. Istanbul / Atasehir",
+    "areaPlaceholder": "e.g. 450",
+    "namePlaceholder": "Your full name",
+    "emailPlaceholder": "name@email.com",
+    "notesPlaceholder": "Any extra details about your project...",
+    "projectTypes": [
+      "Land-for-Flat",
+      "Urban Transformation",
+      "Residential Project",
+      "Commercial Project",
+      "Architecture / Interior",
+      "Other"
+    ],
+    "deedStatuses": [
+      "Titled",
+      "Shared Title",
+      "Floor Easement",
+      "Other"
+    ],
+    "successTitle": "Request received",
+    "success": "Your request has been received. The Efe İnşaat team will contact you as soon as possible.",
+    "error": "Could not send the quote request. Please try again.",
+    "errors": {
+      "required": "This field is required.",
+      "email": "Enter a valid email address.",
+      "phone": "Enter a valid phone number (+90 5xx xxx xx xx).",
+      "area": "Enter a valid m² value.",
+      "kvkk": "Please accept the privacy consent to continue.",
+      "fileSize": "File size cannot exceed 5 MB."
+    }
   },
   "stats": {
     "projects": "Completed Projects",
@@ -76,31 +139,94 @@
   },
   "services": {
     "sectionTag": "Our Services",
-    "title": "Expert Solutions",
-    "subtitle": "We offer quality and aesthetic solutions tailored to your needs.",
+    "title": "Shaping the Future with Efe İnşaat Expertise",
+    "subtitle": "End-to-end services—from turnkey projects and urban transformation to engineering consultancy and interior architecture.",
+    "heroImageAlt": "Efe İnşaat project and construction sites",
+    "categoriesLabel": "Areas of Expertise",
+    "categoriesTitle": "Construction solutions, start to finish",
+    "categoriesSubtitle": "From homes and commercial buildings to land development and project management—the same care and transparency at every stage.",
+    "badges": [
+      "100% Earthquake-Code Compliant",
+      "On-Time Delivery Guarantee",
+      "15+ Years of Field Experience"
+    ],
     "items": [
       {
-        "title": "PVC Windows",
-        "description": "PVC window systems providing high thermal and sound insulation. Energy savings and comfort combined.",
-        "features": ["Thermal Insulation", "Sound Insulation", "Energy Savings", "Easy Maintenance"]
+        "title": "Residential & Commercial Construction",
+        "description": "We deliver turnkey homes, modern living spaces, and business centers from measurement to handover. PVC windows, glass balconies, and facade systems are planned into the project from day one.",
+        "features": ["Turnkey buildings", "Modern living spaces", "Offices and business centers", "Facade and joinery integration"]
       },
       {
-        "title": "Glass Balcony",
-        "description": "Stylish and functional glass balcony systems that make your balconies usable in all four seasons.",
-        "features": ["Folding System", "Sliding System", "Double Glazed Option", "Wind Resistance"]
+        "title": "Urban Transformation & Building Renewal",
+        "description": "We renew existing buildings with modern methods that meet current earthquake codes. For at-risk structures, we manage strengthening or rebuilds within a clear legal framework.",
+        "features": ["Earthquake-code compliance", "At-risk building renewal", "Strengthening and renovation", "Legal process tracking"]
       },
       {
-        "title": "Pergola Systems",
-        "description": "Modern and elegant pergola solutions for your gardens and terraces. Protection from sun and rain.",
-        "features": ["Bioclimatic", "Motorized System", "Aluminum Body", "Remote Control"]
+        "title": "Land-for-Flat Development",
+        "description": "We create high-upside project solutions tailored to landowners. Share ratios, zoning analysis, and delivery timelines are made explicit so the partnership stays fair and durable.",
+        "features": ["Zoning and rights analysis", "Transparent land-for-flat model", "Value-focused design", "Contract and delivery assurance"]
       },
       {
-        "title": "Insect Screens",
-        "description": "Custom-sized insect screen systems for your windows and doors. Effective protection against insects.",
-        "features": ["Pleated Screen", "Hinged Screen", "Sliding Screen", "Fixed Screen"]
+        "title": "Architectural Design & Interior Fit-Out",
+        "description": "We develop functional, aesthetic, and innovative spaces. From planning to detailing, designs follow how you live—with balanced materials and light.",
+        "features": ["Functional planning", "Interior fit-out", "Material and lighting selection", "Custom-sized systems"]
+      },
+      {
+        "title": "Project Management & Contracting",
+        "description": "We run professional site management around budget, time, and quality. Reporting, procurement, and safety sit under one roof throughout the contract.",
+        "features": ["Budget and schedule control", "Site management", "Procurement and quality checks", "Occupational safety discipline"]
+      },
+      {
+        "title": "Infrastructure & Industrial Buildings",
+        "description": "We build durable, scalable industrial plants, warehouses, and infrastructure. Delivery follows technical specs without disrupting operations.",
+        "features": ["Industrial facilities", "Warehouse and logistics buildings", "Infrastructure works", "Technical specification compliance"]
       }
     ],
-    "learnMore": "Learn More"
+    "learnMore": "Learn More",
+    "process": {
+      "sectionTag": "How We Work",
+      "title": "Our process",
+      "subtitle": "From survey to handover, every step is planned, measurable, and shared with you.",
+      "steps": [
+        {
+          "title": "Survey & Planning",
+          "description": "We measure on site, map your needs, and lock a budget and timeline together."
+        },
+        {
+          "title": "Design & Permitting",
+          "description": "We present the design for approval and handle legal and permit steps on your behalf."
+        },
+        {
+          "title": "Quality Production & Site Work",
+          "description": "We run production with material, workmanship, and safety standards under tight control."
+        },
+        {
+          "title": "On-Time Handover",
+          "description": "We deliver on the contracted date and close with warranty and after-sales support."
+        }
+      ]
+    },
+    "faq": {
+      "sectionTag": "FAQ",
+      "title": "About our services",
+      "items": [
+        {
+          "question": "How does a land-for-flat agreement work?",
+          "answer": "We first analyze zoning and your rights, then propose a transparent share model. The contract, project approval, and delivery calendar are put in writing, with regular updates throughout."
+        },
+        {
+          "question": "Which quality and safety standards do you apply?",
+          "answer": "All work follows current earthquake codes, material standards, and occupational safety rules. Quality checks, documented procurement, and a pre-handover checklist keep the process auditable."
+        },
+        {
+          "question": "Do you manage permits and legal steps in urban transformation?",
+          "answer": "Yes. After the at-risk building assessment, we coordinate municipality, permit, and paperwork on your behalf. Required documents are listed clearly, and communication stays in one place."
+        }
+      ]
+    },
+    "ctaTitle": "Get a Proposal for Your Land or Project",
+    "ctaDescription": "Send a survey request—we'll map a clear path for land-for-flat, urban transformation, or turnkey construction.",
+    "ctaButton": "Go to Proposal Form"
   },
   "gallery": {
     "sectionTag": "Gallery",
@@ -160,7 +286,7 @@
       },
       {
         "question": "Do you provide free site inspection?",
-        "answer": "Yes, we offer free site inspection and price quotation for all our services. You can reach us by phone or through the contact form."
+        "answer": "Yes, we offer free site inspection and price quotation for all our services. You can reach us by email or through the contact form."
       },
       {
         "question": "What is the warranty period?",
@@ -189,10 +315,8 @@
     "info": {
       "address": "Address",
       "addressValue": "Efe Construction, Atasehir, Istanbul, Turkey",
-      "phone": "Phone",
-      "phoneValue": "+90 535 747 77 63",
       "email": "Email",
-      "emailValue": "efe.ikan2005@gmail.com",
+      "emailValue": "info@efeinşaat.com",
       "hours": "Working Hours",
       "hoursValue": "Mon-Sat: 08:00 - 18:00"
     }
@@ -202,5 +326,11 @@
     "quickLinks": "Quick Links",
     "contactInfo": "Contact Info",
     "rights": "All rights reserved."
+  },
+  "cookies": {
+    "title": "Cookie Notice",
+    "description": "We use cookies to improve your experience and analyze site traffic. By accepting, you allow Google Analytics cookies. You can decline; the site will keep working with essential features only.",
+    "accept": "Accept",
+    "reject": "Decline"
   }
 }

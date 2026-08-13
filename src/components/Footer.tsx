@@ -1,25 +1,52 @@
 "use client";
 
+import { usePathname, useRouter } from "next/navigation";
 import { Building2, ArrowUp } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 const navLinks = [
-  { key: "home", href: "#hero" },
-  { key: "about", href: "#about" },
-  { key: "services", href: "#services" },
-  { key: "gallery", href: "#gallery" },
-  { key: "contact", href: "#contact" },
+  { key: "home", href: "/#hero" },
+  { key: "about", href: "/hakkimizda" },
+  { key: "services", href: "/hizmetlerimiz" },
+  { key: "gallery", href: "/#gallery" },
+  { key: "contact", href: "/#contact" },
 ];
 
 export default function Footer() {
   const { t } = useLanguage();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const scrollTo = (href: string) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  const navigate = (href: string) => {
+    if (href.startsWith("/#") || href.startsWith("#")) {
+      const hash = href.includes("#") ? `#${href.split("#")[1]}` : href;
+      if (pathname !== "/") {
+        window.location.assign(`/${hash}`);
+        return;
+      }
+      document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    router.push(href);
+    if (!href.includes("#")) {
+      const html = document.documentElement;
+      const previous = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
+      const jump = () => {
+        window.scrollTo(0, 0);
+        html.scrollTop = 0;
+      };
+      jump();
+      requestAnimationFrame(jump);
+      window.setTimeout(() => {
+        jump();
+        html.style.scrollBehavior = previous;
+      }, 50);
+    }
   };
 
   return (
@@ -51,7 +78,7 @@ export default function Footer() {
                     href={link.href}
                     onClick={(e) => {
                       e.preventDefault();
-                      scrollTo(link.href);
+                      navigate(link.href);
                     }}
                     className="text-white/50 hover:text-primary-300 transition-colors text-sm"
                   >
@@ -69,12 +96,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-white/50">
               <li>{t("contact.info.addressValue") as string}</li>
               <li>
-                <a href="tel:+905357477763" className="hover:text-primary-300 transition-colors">
-                  {t("contact.info.phoneValue") as string}
-                </a>
-              </li>
-              <li>
-                <a href="mailto:efe.ikan2005@gmail.com" className="hover:text-primary-300 transition-colors">
+                <a href="mailto:info@efeinşaat.com" className="hover:text-primary-300 transition-colors">
                   {t("contact.info.emailValue") as string}
                 </a>
               </li>

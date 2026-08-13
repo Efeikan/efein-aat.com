@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowDown, Phone, DoorOpen, GlassWater, Umbrella, Bug } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowDown, Mail, DoorOpen, GlassWater, Umbrella, Bug } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 const categories = [
@@ -13,6 +14,7 @@ const categories = [
 
 export default function Hero() {
   const { t } = useLanguage();
+  const router = useRouter();
 
   const scrollTo = (id: string) => {
     document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
@@ -85,7 +87,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <button
-            onClick={() => scrollTo("#services")}
+            onClick={() => router.push("/hizmetlerimiz")}
             className="px-8 py-4 bg-primary-500 text-white font-semibold uppercase tracking-wide text-sm rounded-md hover:bg-primary-600 transition-all duration-200 shadow-lg shadow-black/30"
           >
             {t("hero.cta") as string}
@@ -94,7 +96,7 @@ export default function Hero() {
             onClick={() => scrollTo("#contact")}
             className="px-8 py-4 border border-white/25 text-white font-semibold uppercase tracking-wide text-sm rounded-md hover:bg-white/5 hover:border-white/40 transition-all duration-200 flex items-center gap-2"
           >
-            <Phone className="w-4 h-4" />
+            <Mail className="w-4 h-4" />
             {t("hero.ctaSecondary") as string}
           </button>
         </motion.div>
@@ -107,7 +109,7 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
       >
         <button
-          onClick={() => scrollTo("#about")}
+          onClick={() => scrollTo("#markets")}
           className="text-white/40 hover:text-primary-300 transition-colors animate-bounce"
           aria-label="Scroll down"
         >

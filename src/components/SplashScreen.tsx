@@ -1,186 +1,339 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
 import { Building2 } from "lucide-react";
+
+const BRAND = "Efe İnşaat";
+const TAGLINE = "Kaliteli Çözümler";
+
+/** Silk easing — slow start, long soft settle */
+const silk: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const silkDeep: [number, number, number, number] = [0.05, 0.8, 0.1, 1];
+const silkOut: [number, number, number, number] = [0.4, 0, 0.2, 1];
+
+const HOLD_MS = 2800;
+const EXIT_MS = 2000;
+const TOTAL_MS = HOLD_MS + EXIT_MS;
+
+const springEnter = {
+  type: "spring" as const,
+  stiffness: 52,
+  damping: 16,
+  mass: 1.05,
+};
 
 export default function SplashScreen() {
   const [visible, setVisible] = useState(true);
+  const [exiting, setExiting] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const letters = useMemo(() => Array.from(BRAND), []);
+
+  const dust = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, i) => ({
+        id: i,
+        x: `${8 + ((i * 23) % 84)}%`,
+        y: `${12 + ((i * 31) % 76)}%`,
+        s: 1.2 + (i % 3) * 0.6,
+        d: 5 + (i % 4) * 1.4,
+        delay: i * 0.35,
+      })),
+    []
+  );
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
 
-    const hideTimer = setTimeout(() => setVisible(false), 2200);
+    const exitTimer = setTimeout(() => setExiting(true), HOLD_MS);
+    const hideTimer = setTimeout(() => setVisible(false), TOTAL_MS);
     const unlockTimer = setTimeout(() => {
       document.body.style.overflow = "";
-    }, 2800);
+    }, TOTAL_MS + 200);
 
     return () => {
+      clearTimeout(exitTimer);
       clearTimeout(hideTimer);
       clearTimeout(unlockTimer);
       document.body.style.overflow = "";
     };
   }, []);
 
+  const shellVariants: Variants = {
+    show: { opacity: 1 },
+    leave: {
+      opacity: 0,
+      transition: { duration: 0.9, ease: silkOut, delay: 0.85 },
+    },
+  };
+
+  const stageVariants: Variants = {
+    rest: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      rotateX: 0,
+      filter: "blur(0px)",
+    },
+    away: {
+      opacity: 0,
+      scale: 0.68,
+      y: 40,
+      rotateX: 12,
+      filter: "blur(20px)",
+      transition: {
+        duration: 1.85,
+        ease: silkDeep,
+        opacity: { duration: 1.55, ease: silkOut },
+        filter: { duration: 1.7, ease: silk },
+      },
+    },
+  };
+
+  const letterContainer: Variants = {
+    hidden: {},
+    show: {
+      transition: {
+        staggerChildren: 0.048,
+        delayChildren: 0.38,
+      },
+    },
+  };
+
+  const letterItem: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 42,
+      rotateX: -55,
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      transition: springEnter,
+    },
+  };
+
+  if (reduceMotion) {
+    return (
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            key="splash-reduced"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a1210]"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="text-center">
+              <p className="text-3xl font-semibold text-[#eef3f0]">{BRAND}</p>
+              <p className="mt-3 text-xs tracking-[0.35em] text-primary-300/70 uppercase">
+                {TAGLINE}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {visible && (
         <motion.div
           key="splash"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[var(--bg-primary)] via-[#0e1a17] to-[var(--bg-secondary)]"
-          aria-hidden={!visible}
+          className="fixed inset-0 z-[100] overflow-hidden bg-[#070c0a]"
+          variants={shellVariants}
+          initial="show"
+          animate={exiting ? "leave" : "show"}
+          exit={{ opacity: 0, transition: { duration: 0.5 } }}
+          aria-hidden
         >
+          {/* Base atmosphere */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,#14201c_0%,#0a1210_55%,#050807_100%)]" />
+
+          {/* Slow drifting haze — GPU friendly transforms only */}
           <motion.div
-            aria-hidden
-            initial={{ backgroundPosition: "0px 0px" }}
-            animate={{ backgroundPosition: ["0px 0px", "48px 48px"] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(155,188,176,0.10) 1px, transparent 1px), linear-gradient(90deg, rgba(155,188,176,0.10) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
-            }}
-            className="absolute inset-0"
+            className="absolute -left-1/4 top-[-10%] h-[70vh] w-[70vh] rounded-full bg-primary-600/20 blur-[90px]"
+            animate={{ x: [0, 60, 20, 0], y: [0, 30, -10, 0] }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
           />
-          {/* Vignette fade so the grid softens toward the edges without relying on CSS masks */}
-          <div
-            aria-hidden
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse 70% 60% at 50% 45%, transparent 0%, var(--bg-primary) 85%)",
-            }}
-            className="absolute inset-0"
+          <motion.div
+            className="absolute -right-1/4 bottom-[-15%] h-[75vh] w-[75vh] rounded-full bg-primary-800/25 blur-[100px]"
+            animate={{ x: [0, -50, -15, 0], y: [0, -35, 10, 0] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+          />
+          <motion.div
+            className="absolute left-1/2 top-[42%] h-[36vmin] w-[56vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary-400/10 blur-[60px]"
+            animate={{ scale: [1, 1.12, 1], opacity: [0.5, 0.9, 0.55] }}
+            transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
           />
 
+          {/* Soft construction grid, fades with exit */}
           <motion.div
-            animate={{
-              x: [0, 20, 0],
-              y: [0, 15, 0],
-              scale: [1, 1.08, 1],
+            className="absolute inset-0 opacity-[0.11]"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(155,188,176,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(155,188,176,0.5) 1px, transparent 1px)",
+              backgroundSize: "64px 64px",
+              maskImage:
+                "radial-gradient(ellipse 55% 45% at 50% 46%, #000 0%, transparent 75%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse 55% 45% at 50% 46%, #000 0%, transparent 75%)",
             }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-32 -right-24 h-72 w-72 rounded-full bg-primary-600/25 blur-3xl"
-          />
-          <motion.div
-            animate={{
-              x: [0, -20, 0],
-              y: [0, -15, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-primary-700/30 blur-3xl"
+            animate={
+              exiting
+                ? { opacity: 0, scale: 1.15 }
+                : { opacity: 0.11, scale: [1, 1.03, 1] }
+            }
+            transition={
+              exiting
+                ? { duration: 1.6, ease: silkDeep }
+                : { duration: 12, repeat: Infinity, ease: "easeInOut" }
+            }
           />
 
-          {[...Array(8)].map((_, i) => (
+          {/* Horizontal light pass */}
+          <motion.div
+            className="pointer-events-none absolute inset-y-[-10%] w-[40%] bg-gradient-to-r from-transparent via-white/[0.055] to-transparent"
+            style={{ skewX: "-18deg" }}
+            initial={{ x: "-60%", opacity: 0 }}
+            animate={{ x: ["-60%", "160%"], opacity: [0, 1, 0] }}
+            transition={{ duration: 2.6, delay: 0.55, ease: [0.4, 0, 0.2, 1] }}
+          />
+
+          {/* Floating dust */}
+          {dust.map((p) => (
             <motion.span
-              key={i}
-              className="absolute h-1.5 w-1.5 rounded-full bg-primary-400/60"
-              style={{
-                left: `${12 + i * 10}%`,
-                top: `${20 + ((i * 37) % 60)}%`,
+              key={p.id}
+              className="absolute rounded-full bg-primary-200/50"
+              style={{ left: p.x, top: p.y, width: p.s, height: p.s }}
+              animate={{
+                y: [0, -36, -70],
+                opacity: [0, 0.65, 0],
+                x: [0, (p.id % 2 ? 14 : -12)],
               }}
-              initial={{ opacity: 0, y: 0 }}
-              animate={{ opacity: [0, 0.9, 0], y: [-10, -60] }}
               transition={{
-                duration: 3 + (i % 3),
+                duration: p.d,
                 repeat: Infinity,
-                delay: i * 0.35,
+                delay: p.delay,
                 ease: "easeOut",
               }}
             />
           ))}
 
-          <div className="relative flex flex-col items-center px-6 text-center">
+          {/* Perspective stage */}
+          <div
+            className="relative flex h-full w-full items-center justify-center"
+            style={{ perspective: "1400px", perspectiveOrigin: "50% 42%" }}
+          >
             <motion.div
-              initial={{ scale: 0.6, opacity: 0, rotate: -10 }}
-              animate={{ scale: 1, opacity: 1, rotate: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="relative mb-6 flex h-20 w-20 items-center justify-center"
+              className="relative flex flex-col items-center px-6 text-center will-change-transform"
+              style={{ transformStyle: "preserve-3d" }}
+              variants={stageVariants}
+              initial="rest"
+              animate={exiting ? "away" : "rest"}
             >
-              <motion.span
-                className="absolute inset-0 rounded-full"
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, transparent 0%, #6f9a8c 20%, transparent 45%, transparent 55%, #9bbcb0 75%, transparent 100%)",
-                }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              />
-              <motion.span
-                className="absolute inset-[3px] rounded-full bg-[var(--bg-primary)]"
-              />
-              <motion.span
-                className="absolute inset-0 rounded-full bg-primary-500/40"
-                animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
+              {/* Emblem */}
               <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--bg-card)] shadow-lg shadow-black/40 ring-1 ring-primary-700/60"
+                className="relative mb-9"
+                initial={{ opacity: 0, y: 36, scale: 0.88 }}
+                animate={
+                  exiting
+                    ? { opacity: 0, y: 20, scale: 0.9 }
+                    : { opacity: 1, y: 0, scale: 1 }
+                }
+                transition={
+                  exiting
+                    ? { duration: 1.2, ease: silkDeep }
+                    : { ...springEnter, delay: 0.12 }
+                }
+              >
+                <motion.span
+                  className="absolute -inset-8 rounded-full bg-primary-500/20 blur-2xl"
+                  animate={{ opacity: [0.25, 0.55, 0.3], scale: [0.92, 1.08, 1] }}
+                  transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <div className="relative flex h-[4.75rem] w-[4.75rem] items-center justify-center rounded-[1.4rem] bg-[linear-gradient(160deg,#2a3631_0%,#141c19_100%)] shadow-[0_24px_60px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.06)] ring-1 ring-primary-300/20">
+                  <Building2
+                    className="h-8 w-8 text-primary-300"
+                    strokeWidth={1.4}
+                  />
+                </div>
+              </motion.div>
+
+              {/* Brand letters — spring cascade, 3D flip-in */}
+              <motion.h1
+                className="flex flex-wrap justify-center text-[clamp(2.5rem,7.5vw,4rem)] font-semibold tracking-[-0.035em] text-[#f2f6f4]"
+                style={{ transformStyle: "preserve-3d" }}
+                variants={letterContainer}
+                initial="hidden"
+                animate="show"
+                aria-label={BRAND}
+              >
+                {letters.map((char, i) => (
+                  <motion.span
+                    key={`${char}-${i}`}
+                    className="inline-block origin-bottom will-change-transform"
+                    style={{ transformStyle: "preserve-3d" }}
+                    variants={letterItem}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </motion.h1>
+
+              {/* Divider */}
+              <motion.div
+                className="mt-7 h-px w-36 origin-center bg-gradient-to-r from-transparent via-primary-300/70 to-transparent"
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 1.15, delay: 1.05, ease: silk }}
+              />
+
+              {/* Tagline — tracking breathes in */}
+              <motion.p
+                className="mt-5 text-[0.68rem] font-medium uppercase text-primary-300/80"
+                initial={{ opacity: 0, y: 14, letterSpacing: "0.62em" }}
+                animate={{ opacity: 1, y: 0, letterSpacing: "0.4em" }}
+                transition={{ duration: 1.35, delay: 1.2, ease: silk }}
+              >
+                {TAGLINE}
+              </motion.p>
+
+              {/* Progress — single continuous fill */}
+              <motion.div
+                className="mt-11 h-[1.5px] w-40 overflow-hidden rounded-full bg-white/[0.06]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: exiting ? 0 : 1 }}
+                transition={{ duration: 0.55, delay: exiting ? 0 : 1.45 }}
               >
                 <motion.div
-                  animate={{ rotate: [0, 8, -8, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Building2 className="h-8 w-8 text-primary-400" />
-                </motion.div>
+                  className="h-full origin-left rounded-full bg-gradient-to-r from-primary-600 via-primary-300 to-primary-500"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{
+                    duration: HOLD_MS / 1000,
+                    ease: [0.25, 0.1, 0.25, 1],
+                  }}
+                />
               </motion.div>
             </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 18 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                textShadow: [
-                  "0 0 0px rgba(155,188,176,0)",
-                  "0 0 18px rgba(155,188,176,0.55)",
-                  "0 0 0px rgba(155,188,176,0)",
-                ],
-              }}
-              transition={{
-                opacity: { duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] },
-                y: { duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] },
-                textShadow: { duration: 2.6, repeat: Infinity, delay: 1, ease: "easeInOut" },
-              }}
-              className="text-4xl font-bold tracking-tight text-[var(--text-primary)] sm:text-5xl"
-            >
-              Efe İnşaat
-            </motion.h1>
-
-            <motion.div
-              initial={{ scaleX: 0, opacity: 0 }}
-              animate={{ scaleX: 1, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 h-px w-28 origin-center bg-gradient-to-r from-transparent via-primary-400 to-transparent"
-            />
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.75 }}
-              className="mt-4 text-sm font-medium tracking-[0.2em] text-primary-300/80 uppercase"
-            >
-              Kaliteli Çözümler
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.9 }}
-              className="mt-8 h-1 w-40 overflow-hidden rounded-full bg-primary-900/50"
-            >
-              <motion.div
-                className="h-full w-1/3 rounded-full bg-gradient-to-r from-primary-400 via-primary-600 to-primary-400"
-                animate={{ x: ["-100%", "220%"] }}
-                transition={{ duration: 1.3, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </motion.div>
           </div>
+
+          {/* Soft vignette + exit veil */}
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_45%,transparent_30%,rgba(5,8,7,0.55)_100%)]" />
+          <motion.div
+            className="pointer-events-none absolute inset-0 bg-[#070c0a]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: exiting ? 0.35 : 0 }}
+            transition={{ duration: 1.6, ease: silkDeep }}
+          />
         </motion.div>
       )}
     </AnimatePresence>

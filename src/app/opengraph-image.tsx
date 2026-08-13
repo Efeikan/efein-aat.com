@@ -100,7 +100,7 @@ export default async function Image() {
             fontSize: 26,
           }}
         >
-          Ataşehir, İstanbul · +90 535 747 77 63
+          Ataşehir, İstanbul · info@efeinşaat.com
         </div>
       </div>
     ),

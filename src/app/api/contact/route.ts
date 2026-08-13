@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import { CONTACT_EMAIL, escapeHtml, sendMail } from "@/lib/mail";
 
 export const runtime = "nodejs";
-
-const CONTACT_EMAIL = process.env.CONTACT_EMAIL || "efe.ikan2005@gmail.com";
-
-function escapeHtml(value: string) {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
 function buildEmailHtml(name: string, email: string, phone: string, message: string) {
   const safeName = escapeHtml(name);
@@ -58,53 +47,25 @@ function buildEmailHtml(name: string, email: string, phone: string, message: str
     <title>Efe İnşaat - Yeni İletişim Formu Mesajı</title>
   </head>
   <body style="margin: 0; padding: 0; background: #e9efec; font-family: 'Segoe UI', Helvetica, Arial, sans-serif;">
-    <div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">
-      ${safeName} adlı ziyaretçi Efe İnşaat web sitesinden yeni bir mesaj gönderdi.
-    </div>
-
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: #e9efec; padding: 32px 16px;">
       <tr>
         <td align="center">
           <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(40, 56, 52, 0.12);">
-
-            <!-- Hazard stripe accent -->
             <tr>
               <td style="height: 6px; background: ${hazardStripe};"></td>
             </tr>
-
-            <!-- Header -->
             <tr>
-              <td style="background: linear-gradient(135deg, #2f433e 0%, #43665c 55%, #557f72 100%); padding: 32px 32px 28px 32px;">
-                <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
-                  <tr>
-                    <td style="vertical-align: middle;">
-                      <table role="presentation" cellpadding="0" cellspacing="0">
-                        <tr>
-                          <td style="width: 48px; height: 48px; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 12px; text-align: center; vertical-align: middle; font-size: 24px;">🏗️</td>
-                          <td style="padding-left: 14px; vertical-align: middle;">
-                            <div style="color: #ffffff; font-size: 19px; font-weight: 700; letter-spacing: 0.02em;">Efe İnşaat</div>
-                            <div style="color: #c2d7ce; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px;">Pimapen &middot; Cam Balkon &middot; Pergole &middot; Sineklik</div>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td align="right" style="vertical-align: middle;">
-                      <span style="display: inline-block; background: rgba(255,255,255,0.15); color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.3);">Yeni Mesaj</span>
-                    </td>
-                  </tr>
-                </table>
+              <td style="background: linear-gradient(135deg, #2f433e 0%, #43665c 55%, #557f72 100%); padding: 32px;">
+                <div style="color: #ffffff; font-size: 19px; font-weight: 700;">Efe İnşaat</div>
+                <div style="color: #c2d7ce; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 4px;">Yeni İletişim Formu Mesajı</div>
               </td>
             </tr>
-
-            <!-- Title -->
             <tr>
               <td style="padding: 28px 32px 4px 32px;">
-                <h1 style="margin: 0; font-size: 20px; color: #1e2a26; font-weight: 700;">📋 Web Sitesinden Yeni Talep</h1>
-                <p style="margin: 6px 0 0 0; font-size: 14px; color: #6f9a8c;">Bir ziyaretçi iletişim formu üzerinden sizinle iletişime geçmek istiyor.</p>
+                <h1 style="margin: 0; font-size: 20px; color: #1e2a26; font-weight: 700;">Web Sitesinden Yeni Talep</h1>
+                <p style="margin: 6px 0 0 0; font-size: 14px; color: #6f9a8c;">Bir ziyaretçi iletişim formu üzerinden yazdı.</p>
               </td>
             </tr>
-
-            <!-- Info cards -->
             <tr>
               <td style="padding: 20px 32px 4px 32px;">
                 <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
@@ -114,52 +75,37 @@ function buildEmailHtml(name: string, email: string, phone: string, message: str
                 </table>
               </td>
             </tr>
-
-            <!-- Message -->
             <tr>
               <td style="padding: 8px 32px 0 32px;">
                 <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background: #f2f7f5; border-radius: 10px; border: 1px solid #e0ebe6; border-left: 4px solid #557f72;">
                   <tr>
                     <td style="padding: 18px 20px;">
-                      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6f9a8c; margin: 0 0 8px 0;">💬 Mesaj</div>
+                      <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6f9a8c; margin: 0 0 8px 0;">Mesaj</div>
                       <div style="font-size: 15px; line-height: 1.6; color: #1e2a26;">${safeMessage}</div>
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
-
-            <!-- CTA -->
             <tr>
               <td style="padding: 26px 32px 8px 32px;" align="center">
-                <a href="mailto:${safeEmail}" style="display: inline-block; background: #557f72; color: #ffffff; font-size: 14px; font-weight: 700; letter-spacing: 0.03em; text-decoration: none; padding: 14px 32px; border-radius: 10px;">✉️ Müşteriye Yanıt Ver</a>
+                <a href="mailto:${safeEmail}" style="display: inline-block; background: #557f72; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none; padding: 14px 32px; border-radius: 10px;">Müşteriye Yanıt Ver</a>
               </td>
             </tr>
-
-            <!-- Footer note -->
             <tr>
               <td style="padding: 20px 32px 28px 32px;">
-                <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #e0ebe6; padding-top: 16px;">
-                  <tr>
-                    <td>
-                      <p style="margin: 16px 0 0 0; font-size: 12px; color: #9bb0a8;">
-                        Gönderim tarihi: <strong style="color: #5a6b64;">${submittedAt}</strong><br>
-                        Bu e-posta <strong style="color: #5a6b64;">efeinsaat.com</strong> iletişim formundan otomatik olarak oluşturulmuştur. Yanıtlarken doğrudan "Yanıtla" butonunu kullanabilirsiniz.
-                      </p>
-                    </td>
-                  </tr>
-                </table>
+                <p style="margin: 16px 0 0 0; font-size: 12px; color: #9bb0a8; border-top: 1px solid #e0ebe6; padding-top: 16px;">
+                  Gönderim tarihi: <strong style="color: #5a6b64;">${submittedAt}</strong><br>
+                  Bu e-posta efeinşaat.com iletişim formundan otomatik oluşturulmuştur.
+                </p>
               </td>
             </tr>
-
-            <!-- Hazard stripe accent -->
             <tr>
               <td style="height: 6px; background: ${hazardStripe};"></td>
             </tr>
           </table>
-
           <p style="max-width: 600px; margin: 18px 0 0 0; font-size: 11px; color: #9bb0a8; text-align: center;">
-            Efe İnşaat &middot; Ataşehir, İstanbul &middot; +90 535 747 77 63
+            Efe İnşaat &middot; Ataşehir, İstanbul &middot; ${CONTACT_EMAIL}
           </p>
         </td>
       </tr>
@@ -167,64 +113,6 @@ function buildEmailHtml(name: string, email: string, phone: string, message: str
   </body>
   </html>
   `;
-}
-
-async function sendWithResend(name: string, email: string, phone: string, message: string) {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const from = process.env.RESEND_FROM_EMAIL || "Efe İnşaat Web Formu <onboarding@resend.dev>";
-
-  const { error } = await resend.emails.send({
-    from,
-    to: CONTACT_EMAIL,
-    replyTo: email,
-    subject: `🏗️ Yeni İletişim Formu Mesajı - ${name}`,
-    html: buildEmailHtml(name, email, phone, message),
-  });
-
-  if (error) {
-    throw new Error(error.message || "Resend mail gönderimi başarısız.");
-  }
-}
-
-async function sendWithFormSubmit(name: string, email: string, phone: string, message: string) {
-  const siteUrl = process.env.SITE_URL || "https://efeinsaat.com";
-
-  const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      // FormSubmit rejects requests without a Referer/Origin as "browsed as HTML file"
-      Referer: siteUrl,
-      Origin: siteUrl,
-    },
-    body: JSON.stringify({
-      name,
-      email,
-      phone: phone || "Belirtilmedi",
-      message,
-      _replyto: email,
-      _subject: `Yeni İletişim Formu - ${name}`,
-      _template: "table",
-      _captcha: "false",
-    }),
-  });
-
-  const data = (await response.json().catch(() => ({}))) as {
-    success?: string | boolean;
-    message?: string;
-    error?: string;
-  };
-
-  if (!response.ok) {
-    throw new Error(data.message || data.error || "FormSubmit mail gönderimi başarısız.");
-  }
-
-  // FormSubmit returns success as the STRING "false" (not boolean false) on failure,
-  // e.g. when the destination inbox still needs one-time activation.
-  if (String(data.success) === "false") {
-    throw new Error(data.message || "Mail gönderilemedi.");
-  }
 }
 
 export async function POST(req: NextRequest) {
@@ -236,7 +124,6 @@ export async function POST(req: NextRequest) {
     const message = typeof body.message === "string" ? body.message.trim() : "";
     const honeypot = typeof body.website === "string" ? body.website.trim() : "";
 
-    // Honeypot: bots fill hidden fields
     if (honeypot) {
       return NextResponse.json({ success: true });
     }
@@ -248,16 +135,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    if (!emailOk) {
-      return NextResponse.json({ error: "Geçerli bir e-posta adresi girin." }, { status: 400 });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json(
+        { error: "Geçerli bir e-posta adresi girin." },
+        { status: 400 }
+      );
     }
 
-    if (process.env.RESEND_API_KEY) {
-      await sendWithResend(name, email, phone, message);
-    } else {
-      await sendWithFormSubmit(name, email, phone, message);
-    }
+    await sendMail({
+      subject: `Yeni İletişim Formu Mesajı - ${name}`,
+      replyTo: email,
+      html: buildEmailHtml(name, email, phone, message),
+      text: `Ad: ${name}\nE-posta: ${email}\nTelefon: ${phone || "-"}\n\n${message}`,
+      fields: {
+        name,
+        email,
+        phone: phone || "Belirtilmedi",
+        message,
+      },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -265,7 +161,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "Mail gönderilemedi. İlk kullanımda efe.ikan2005@gmail.com adresine gelen onay mailini onaylayın, ardından tekrar deneyin.",
+          error instanceof Error
+            ? error.message
+            : "Mail gönderilemedi. Lütfen daha sonra tekrar deneyin.",
       },
       { status: 500 }
     );

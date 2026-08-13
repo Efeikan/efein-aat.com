@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --keep-vars",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload -- --keep-vars",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
@@ -17,13 +17,14 @@
     "framer-motion": "^12.34.3",
     "lucide-react": "^0.575.0",
     "next": "^16.3.0",
+    "nodemailer": "^9.0.5",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "resend": "^6.9.3"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

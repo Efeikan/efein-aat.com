@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import { LanguageProvider } from "@/context/LanguageContext";
+import { CookieConsent } from "@/components/CookieConsent";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import ScrollToTop from "@/components/ScrollToTop";
 import "./globals.css";
-
-const GA_MEASUREMENT_ID = "G-YFQ2JYM85M";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,7 +21,7 @@ const SITE_NAME = "Efe İnşaat";
 const TITLE =
   "Efe İnşaat | Ataşehir Pimapen, Cam Balkon, Pergole ve Sineklik Firması";
 const DESCRIPTION =
-  "Efe İnşaat, Ataşehir ve İstanbul genelinde pimapen (PVC pencere), cam balkon, pergole ve sineklik sistemlerinde 15+ yıllık deneyimiyle hizmet veren güvenilir inşaat firmasıdır. Ücretsiz keşif için hemen arayın: +90 535 747 77 63.";
+  "Efe İnşaat, Ataşehir ve İstanbul genelinde pimapen (PVC pencere), cam balkon, pergole ve sineklik sistemlerinde 15+ yıllık deneyimiyle hizmet veren güvenilir inşaat firmasıdır. Ücretsiz keşif için: info@efeinşaat.com.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -112,7 +112,7 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   formatDetection: {
-    telephone: true,
+    telephone: false,
     email: true,
     address: true,
   },
@@ -138,8 +138,7 @@ const jsonLd = {
       logo: `${SITE_URL}/icon-512.png`,
       image: `${SITE_URL}/opengraph-image`,
       description: DESCRIPTION,
-      telephone: "+905357477763",
-      email: "efe.ikan2005@gmail.com",
+      email: "info@efeinşaat.com",
       priceRange: "₺₺",
       address: {
         "@type": "PostalAddress",
@@ -240,7 +239,7 @@ const jsonLd = {
           name: "Ücretsiz keşif yapıyor musunuz?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Evet, tüm hizmetlerimiz için ücretsiz keşif ve fiyat teklifi sunuyoruz. Bize telefonla veya iletişim formu üzerinden ulaşabilirsiniz.",
+            text: "Evet, tüm hizmetlerimiz için ücretsiz keşif ve fiyat teklifi sunuyoruz. Bize iletişim formu veya e-posta üzerinden ulaşabilirsiniz.",
           },
         },
         {
@@ -262,7 +261,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className="dark" suppressHydrationWarning>
+    <html lang="tr" className="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
         <script
           type="application/ld+json"
@@ -272,19 +271,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--bg-primary)] text-[var(--text-primary)]`}
       >
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
-          `}
-        </Script>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <ScrollToTop />
+          <GoogleAnalytics />
+          {children}
+          <CookieConsent />
+        </LanguageProvider>
       </body>
     </html>
   );
