@@ -1,11 +1,19 @@
 import nodemailer from "nodemailer";
 import { domainToASCII } from "node:url";
 
-export const CONTACT_EMAIL =
-  process.env.CONTACT_EMAIL?.trim() || "info@xn--efeinaat-rwb.com";
-
-/** Görünür / reply-to iletişim adresi */
+/** Görünür marka adresi (ş'li) */
 export const DISPLAY_EMAIL = "info@efeinşaat.com";
+
+/**
+ * Doğrulanmış Punycode (Node domainToASCII('efeinşaat.com') = xn--efeinaat-rwb.com).
+ * Kullanıcı kaynaklarında geçen xkb varyantı da aday listesinde.
+ */
+const PUNYCODE_RW = "info@xn--efeinaat-rwb.com";
+const PUNYCODE_XKB = "info@xn--efeinaat-xkb.com";
+const ASCII_EMAIL = "info@efeinsaat.com";
+
+export const CONTACT_EMAIL =
+  process.env.CONTACT_EMAIL?.trim() || PUNYCODE_RW;
 
 type Attachment = {
   filename: string;
@@ -30,15 +38,35 @@ type SendMailOptions = {
   customerConfirmation?: CustomerConfirmation;
 };
 
-type SmtpConfig = {
-  host: string;
-  port: number;
-  pass: string;
-  userCandidates: string[];
-  toCandidates: string[];
-};
-
 const SMTP_TIMEOUT_MS = 15_000;
+
+function logMail(level: "info" | "warn" | "error", message: string, extra?: unknown) {
+  const prefix = `[mail][${new Date().toISOString()}]`;
+  if (level === "info") console.info(prefix, message, extra ?? "");
+  else if (level === "warn") console.warn(prefix, message, extra ?? "");
+  else console.error(prefix, message, extra ?? "");
+}
+
+function dumpError(error: unknown) {
+  if (error instanceof Error) {
+    const extra = error as Error & {
+      code?: string;
+      response?: string;
+      responseCode?: number;
+      command?: string;
+    };
+    return {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+      code: extra.code,
+      response: extra.response,
+      responseCode: extra.responseCode,
+      command: extra.command,
+    };
+  }
+  return { message: String(error) };
+}
 
 function toPunycodeEmail(email: string) {
   const at = email.lastIndexOf("@");
@@ -60,7 +88,7 @@ function uniqueEmails(list: string[]) {
   const seen = new Set<string>();
   const out: string[] = [];
   for (const item of list) {
-    const v = item.trim();
+    const v = item?.trim();
     if (!v || seen.has(v)) continue;
     seen.add(v);
     out.push(v);
@@ -79,12 +107,11 @@ function isAuthError(error: unknown) {
 }
 
 function isConnectError(error: unknown) {
-  return /proxy request failed|cannot connect|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|socket|network|fetch failed|ConnectTimeout|certificate|SSL|TLS/i.test(
+  return /proxy request failed|cannot connect|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|socket|network|fetch failed|ConnectTimeout|certificate|SSL|TLS|ECONNRESET/i.test(
     errorMessage(error)
   );
 }
 
-/** OpenNext / Cloudflare Workers — outbound SMTP TCP desteklenmez */
 function isCloudflareWorker() {
   return (
     typeof (globalThis as { WebSocketPair?: unknown }).WebSocketPair !==
@@ -93,43 +120,43 @@ function isCloudflareWorker() {
 }
 
 /**
- * Canlı / lokal ortam değişkenlerini kontrol eder (değerleri loglamaz).
+ * Ortam değişkeni durumu (şifre değeri ASLA loglanmaz).
  */
 export function getMailEnvStatus() {
-  const keys = [
-    "SMTP_HOST",
-    "SMTP_PORT",
-    "SMTP_USER",
-    "SMTP_PASS",
-    "CONTACT_EMAIL",
-    "MAIL_TRANSPORT",
-  ] as const;
-
-  const present: Record<string, boolean> = {};
-  for (const key of keys) {
-    present[key] = Boolean(process.env[key]?.trim());
-  }
-
-  const required = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "CONTACT_EMAIL"];
-  const missing = required.filter((key) => !present[key]);
+  const host = process.env.SMTP_HOST?.trim() || "smtp.hostinger.com";
+  const port = process.env.SMTP_PORT?.trim() || "465";
+  const user =
+    process.env.SMTP_USER?.trim() || PUNYCODE_RW;
+  const pass = process.env.SMTP_PASS?.trim() || "";
+  const contact = process.env.CONTACT_EMAIL?.trim() || PUNYCODE_RW;
+  const transport =
+    process.env.MAIL_TRANSPORT?.trim() ||
+    (isCloudflareWorker() ? "http" : "smtp");
 
   return {
-    present,
-    missing,
-    transport: process.env.MAIL_TRANSPORT?.trim() || (isCloudflareWorker() ? "http" : "smtp"),
-    okForSmtp: missing.length === 0,
+    host,
+    port,
+    user,
+    contact,
+    transport,
+    hasPass: Boolean(pass),
+    passLength: pass.length,
+    present: {
+      SMTP_HOST: Boolean(process.env.SMTP_HOST?.trim()),
+      SMTP_PORT: Boolean(process.env.SMTP_PORT?.trim()),
+      SMTP_USER: Boolean(process.env.SMTP_USER?.trim()),
+      SMTP_PASS: Boolean(pass),
+      CONTACT_EMAIL: Boolean(process.env.CONTACT_EMAIL?.trim()),
+      MAIL_TRANSPORT: Boolean(process.env.MAIL_TRANSPORT?.trim()),
+    },
   };
 }
 
-/**
- * İstemciye ham proxy/SMTP detayı sızdırmaz.
- */
 export function toClientMailError(error: unknown): string {
-  console.error("[mail]", errorMessage(error), error);
+  logMail("error", "client-facing failure", dumpError(error));
 
   const msg = errorMessage(error);
-
-  if (/SMTP_PASS|tanımlı değil|eksik ortam/i.test(msg)) {
+  if (/SMTP_PASS|şifre|password|eksik ortam/i.test(msg)) {
     return "Mail yapılandırması eksik. Lütfen daha sonra tekrar deneyin.";
   }
   if (isConnectError(error) || /proxy/i.test(msg)) {
@@ -138,47 +165,48 @@ export function toClientMailError(error: unknown): string {
   if (isAuthError(error)) {
     return "Mail sunucusu kimlik doğrulaması başarısız. Lütfen daha sonra tekrar deneyin.";
   }
-
   return "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin veya e-posta ile ulaşın.";
 }
 
-function requireSmtpConfig(): SmtpConfig {
-  const status = getMailEnvStatus();
-  if (!status.okForSmtp) {
+function resolveSmtpConfig() {
+  const env = getMailEnvStatus();
+  // Şifre kodda hardcode edilmez — Cloudflare Secret / .env.local zorunlu
+  const pass = process.env.SMTP_PASS?.trim();
+  if (!pass) {
     throw new Error(
-      `Eksik ortam değişkenleri: ${status.missing.join(", ")}. Cloudflare Worker Secrets / .env.local kontrol edin.`
+      "SMTP_PASS eksik. Cloudflare Worker → Settings → Variables and secrets içine ekleyin."
     );
   }
 
-  const host = process.env.SMTP_HOST!.trim() || "smtp.hostinger.com";
-  const port = Number(process.env.SMTP_PORT || "465");
-  const pass = process.env.SMTP_PASS!;
-  const rawUser = process.env.SMTP_USER!.trim();
-
+  const rawUser = env.user;
   const userCandidates = uniqueEmails([
     rawUser,
     toPunycodeEmail(rawUser),
+    toPunycodeEmail(DISPLAY_EMAIL),
+    PUNYCODE_RW,
+    PUNYCODE_XKB,
+    ASCII_EMAIL,
+    DISPLAY_EMAIL,
     asciiFallbackEmail(rawUser),
-    "info@efeinşaat.com",
-    "info@efeinsaat.com",
-    "info@xn--efeinaat-rwb.com",
   ]);
 
   const toCandidates = uniqueEmails([
-    CONTACT_EMAIL,
-    toPunycodeEmail(CONTACT_EMAIL),
-    asciiFallbackEmail(CONTACT_EMAIL),
-    "info@efeinsaat.com",
+    env.contact,
+    toPunycodeEmail(env.contact),
+    PUNYCODE_RW,
+    ASCII_EMAIL,
+    DISPLAY_EMAIL,
   ]);
 
-  return { host, port, pass, userCandidates, toCandidates };
+  return {
+    host: env.host,
+    port: Number(env.port) || 465,
+    pass,
+    userCandidates,
+    toCandidates,
+  };
 }
 
-/**
- * Port 465 → SSL (secure: true)
- * Port 587 → STARTTLS (secure: false, requireTLS: true)
- * Canlıda sertifika/proxy sorunları için rejectUnauthorized: false
- */
 function createTransport(
   host: string,
   port: number,
@@ -186,7 +214,6 @@ function createTransport(
   pass: string
 ) {
   const useSsl = port === 465;
-
   return nodemailer.createTransport({
     host,
     port,
@@ -198,7 +225,6 @@ function createTransport(
     socketTimeout: SMTP_TIMEOUT_MS,
     tls: {
       minVersion: "TLSv1.2",
-      // Bazı edge / proxy ortamlarda zincir doğrulaması bağlantıyı keser
       rejectUnauthorized: false,
       servername: host,
     },
@@ -206,8 +232,15 @@ function createTransport(
 }
 
 async function sendViaSmtp(options: SendMailOptions) {
-  const { host, port, pass, userCandidates, toCandidates } = requireSmtpConfig();
+  const { host, port, pass, userCandidates, toCandidates } = resolveSmtpConfig();
   const to = options.to?.trim() || toCandidates[0];
+
+  logMail("info", "SMTP attempt start", {
+    host,
+    port,
+    to,
+    userCandidates,
+  });
 
   const mailOptions = (user: string) => ({
     from: `"Efe İnşaat" <${user}>`,
@@ -225,7 +258,6 @@ async function sendViaSmtp(options: SendMailOptions) {
     })),
   });
 
-  // Önce yapılandırılan port, sonra yedek (465 ↔ 587)
   const tryPorts =
     port === 465 ? [465, 587] : port === 587 ? [587, 465] : [port, 465, 587];
 
@@ -233,21 +265,21 @@ async function sendViaSmtp(options: SendMailOptions) {
 
   for (const p of tryPorts) {
     for (const user of userCandidates) {
-      const transporter = createTransport(host, p, user, pass);
       try {
+        const transporter = createTransport(host, p, user, pass);
         await transporter.sendMail(mailOptions(user));
-        console.info(`[mail] SMTP OK host=${host} port=${p} user=${user}`);
+        logMail("info", "SMTP success", { host, port: p, user, to });
         return;
       } catch (error) {
         lastError = error;
-        console.warn(
-          `[mail] SMTP fail host=${host} port=${p} user=${user}:`,
-          errorMessage(error)
-        );
-        if (isConnectError(error)) {
-          // Bu port/ortamda TCP yok → diğer porta veya HTTP’ye
-          break;
-        }
+        logMail("warn", "SMTP attempt failed", {
+          host,
+          port: p,
+          user,
+          to,
+          error: dumpError(error),
+        });
+        if (isConnectError(error)) break;
         if (!isAuthError(error)) throw error;
       }
     }
@@ -258,98 +290,197 @@ async function sendViaSmtp(options: SendMailOptions) {
     : new Error("SMTP bağlantısı kurulamadı.");
 }
 
-async function sendViaFormSubmit(options: SendMailOptions) {
-  const to = options.to?.trim() || "info@efeinsaat.com";
+async function postFormSubmit(
+  to: string,
+  payload: Record<string, string>
+) {
+  const url = `https://formsubmit.co/ajax/${encodeURIComponent(to)}`;
+  logMail("info", "FormSubmit request", { to, url, keys: Object.keys(payload) });
 
-  const body = new FormData();
-  body.append("_subject", options.subject);
-  body.append("_template", "table");
-  body.append("_captcha", "false");
-  body.append("_honey", "");
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(SMTP_TIMEOUT_MS),
+  });
 
-  if (options.replyTo) {
-    body.append("_replyto", options.replyTo);
-    body.append("email", options.replyTo);
-  }
-
-  if (options.fields) {
-    for (const [key, value] of Object.entries(options.fields)) {
-      if (value) body.append(key, value);
-    }
-  }
-
-  if (options.text) body.append("message", options.text);
-  if (options.html) body.append("html_content", options.html);
-
-  if (options.customerConfirmation?.text) {
-    body.append("_autoresponse", options.customerConfirmation.text);
-  }
-
-  if (options.attachments?.length) {
-    for (const file of options.attachments) {
-      const bytes = Buffer.isBuffer(file.content)
-        ? file.content
-        : Buffer.from(file.content);
-      body.append(
-        "attachment",
-        new Blob([Uint8Array.from(bytes)]),
-        file.filename
-      );
-    }
-  }
-
-  const response = await fetch(
-    `https://formsubmit.co/ajax/${encodeURIComponent(to)}`,
-    {
-      method: "POST",
-      headers: { Accept: "application/json" },
-      body,
-      signal: AbortSignal.timeout(SMTP_TIMEOUT_MS),
-    }
-  );
-
-  const payload = (await response.json().catch(() => null)) as {
+  const raw = await response.text();
+  type FormSubmitJson = {
     success?: string | boolean;
     message?: string;
     error?: string;
-  } | null;
+  };
+  let parsed: FormSubmitJson | null = null;
+  try {
+    parsed = JSON.parse(raw) as FormSubmitJson;
+  } catch {
+    parsed = null;
+  }
+
+  logMail("info", "FormSubmit response", {
+    to,
+    status: response.status,
+    ok: response.ok,
+    body: raw.slice(0, 500),
+  });
 
   const ok =
     response.ok &&
-    (payload?.success === true ||
-      payload?.success === "true" ||
-      payload?.success === "ok");
+    !!parsed &&
+    (parsed.success === true ||
+      parsed.success === "true" ||
+      parsed.success === "ok");
 
   if (!ok) {
     throw new Error(
-      payload?.message ||
-        payload?.error ||
-        `Mail sunucusu yanıt vermedi (${response.status})`
+      parsed?.message ||
+        parsed?.error ||
+        `FormSubmit başarısız (HTTP ${response.status}): ${raw.slice(0, 200)}`
     );
   }
+}
 
-  console.info(`[mail] HTTP OK to=${to}`);
+async function sendViaFormSubmit(options: SendMailOptions) {
+  const recipients = uniqueEmails([
+    options.to?.trim() || "",
+    ASCII_EMAIL,
+    PUNYCODE_RW,
+    DISPLAY_EMAIL,
+    CONTACT_EMAIL,
+  ]);
+
+  const payload: Record<string, string> = {
+    _subject: options.subject,
+    _template: "table",
+    _captcha: "false",
+  };
+
+  if (options.replyTo) {
+    payload._replyto = options.replyTo;
+    payload.email = options.replyTo;
+  }
+  if (options.fields) {
+    for (const [key, value] of Object.entries(options.fields)) {
+      if (value) payload[key] = value;
+    }
+  }
+  if (options.text) payload.message = options.text;
+  if (options.html) payload.html_content = options.html;
+  if (options.customerConfirmation?.text) {
+    payload._autoresponse = options.customerConfirmation.text;
+  }
+
+  // Ek varsa multipart (JSON ek desteklemez)
+  if (options.attachments?.length) {
+    let lastError: unknown;
+    for (const to of recipients) {
+      try {
+        const body = new FormData();
+        for (const [k, v] of Object.entries(payload)) body.append(k, v);
+        for (const file of options.attachments) {
+          const bytes = Buffer.isBuffer(file.content)
+            ? file.content
+            : Buffer.from(file.content);
+          body.append(
+            "attachment",
+            new Blob([Uint8Array.from(bytes)]),
+            file.filename
+          );
+        }
+        const response = await fetch(
+          `https://formsubmit.co/ajax/${encodeURIComponent(to)}`,
+          {
+            method: "POST",
+            headers: { Accept: "application/json" },
+            body,
+            signal: AbortSignal.timeout(SMTP_TIMEOUT_MS),
+          }
+        );
+        const raw = await response.text();
+        logMail("info", "FormSubmit multipart response", {
+          to,
+          status: response.status,
+          body: raw.slice(0, 500),
+        });
+        const parsed = JSON.parse(raw) as {
+          success?: string | boolean;
+          message?: string;
+        };
+        if (
+          response.ok &&
+          (parsed.success === true ||
+            parsed.success === "true" ||
+            parsed.success === "ok")
+        ) {
+          return;
+        }
+        lastError = new Error(parsed.message || raw.slice(0, 200));
+      } catch (error) {
+        lastError = error;
+        logMail("warn", "FormSubmit multipart fail", {
+          to,
+          error: dumpError(error),
+        });
+      }
+    }
+    throw lastError instanceof Error
+      ? lastError
+      : new Error("FormSubmit ekli gönderim başarısız.");
+  }
+
+  let lastError: unknown;
+  for (const to of recipients) {
+    try {
+      await postFormSubmit(to, payload);
+      logMail("info", "FormSubmit success", { to });
+      return;
+    } catch (error) {
+      lastError = error;
+      logMail("warn", "FormSubmit recipient failed", {
+        to,
+        error: dumpError(error),
+      });
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new Error("FormSubmit tüm alıcı adaylarında başarısız.");
 }
 
 /**
- * Canlı (Cloudflare Workers): HTTP (FormSubmit) — SMTP TCP çalışmaz.
- * Lokal Node: SMTP (465 SSL → 587 STARTTLS yedek), başarısızsa HTTP.
+ * Cloudflare Workers: HTTP (FormSubmit) — SMTP TCP yok.
+ * Lokal: SMTP (465/587 + Punycode kullanıcı), sonra HTTP yedek.
  */
 export async function sendMail(options: SendMailOptions) {
   const env = getMailEnvStatus();
-  console.info("[mail] env check", {
-    transport: env.transport,
-    missing: env.missing,
-    present: env.present,
+  logMail("info", "sendMail start", {
+    subject: options.subject,
+    hasCustomerConfirmation: Boolean(options.customerConfirmation),
+    env: {
+      host: env.host,
+      port: env.port,
+      user: env.user,
+      contact: env.contact,
+      transport: env.transport,
+      hasPass: env.hasPass,
+      passLength: env.passLength,
+      present: env.present,
+      isWorker: isCloudflareWorker(),
+    },
   });
 
   const preferHttp =
     isCloudflareWorker() || process.env.MAIL_TRANSPORT === "http";
 
-  if (!preferHttp && env.okForSmtp) {
+  const errors: unknown[] = [];
+
+  if (!preferHttp) {
     try {
       await sendViaSmtp({ ...options, to: options.to });
-
       if (options.customerConfirmation && !options.to) {
         await sendViaSmtp({
           to: options.customerConfirmation.to,
@@ -361,11 +492,11 @@ export async function sendMail(options: SendMailOptions) {
       }
       return;
     } catch (error) {
-      console.warn("[mail] SMTP başarısız, HTTP yedeğine geçiliyor:", error);
-      if (!isConnectError(error) && !isAuthError(error)) {
-        // Beklenmeyen hatalarda da HTTP dene; yine olmazsa aşağıda fırlatılır
-      }
+      errors.push(error);
+      logMail("warn", "SMTP path failed — falling back to HTTP", dumpError(error));
     }
+  } else {
+    logMail("info", "Skipping SMTP (Cloudflare/http transport)");
   }
 
   try {
@@ -375,7 +506,10 @@ export async function sendMail(options: SendMailOptions) {
       customerConfirmation: options.customerConfirmation,
     });
   } catch (error) {
-    console.error("[mail] HTTP yedek de başarısız:", error);
+    errors.push(error);
+    logMail("error", "All mail transports failed", {
+      errors: errors.map(dumpError),
+    });
     throw error;
   }
 }
