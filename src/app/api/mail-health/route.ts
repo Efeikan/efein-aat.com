@@ -3,10 +3,7 @@ import { getMailEnvStatus } from "@/lib/mail";
 
 export const runtime = "nodejs";
 
-/**
- * Mail env teşhisi — şifre değeri dönmez.
- * Açmak için Cloudflare / .env: MAIL_DEBUG=1
- */
+/** MAIL_DEBUG=1 iken Resend env teşhisi (API key değeri dönmez). */
 export async function GET() {
   if (process.env.MAIL_DEBUG?.trim() !== "1") {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
@@ -15,12 +12,12 @@ export async function GET() {
   const status = getMailEnvStatus();
   return NextResponse.json({
     ok: true,
-    note: "SMTP_PASS değeri güvenlik için gösterilmez",
+    note: "RESEND_API_KEY değeri güvenlik için gösterilmez",
     ...status,
     tips: [
       "Canlı log: npx wrangler tail",
-      "Workers SMTP TCP desteklemez → MAIL_TRANSPORT=http + FormSubmit",
-      "SMTP_USER için Punycode: info@xn--efeinaat-rwb.com",
+      "Resend: https://resend.com/api-keys",
+      "onboarding@resend.dev ile testte alıcı genelde Resend hesap e-postanızdır; domain doğrulayınca info@efeinsaat.com’a serbestçe gider",
     ],
   });
 }

@@ -287,7 +287,7 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    // Yönetici bildirimi + müşteri onay (SMTP’de 2 mail, Workers’ta FormSubmit + autoresponse)
+    // Yönetici bildirimi + müşteri onay (Resend)
     await sendMail({
       subject: `Yeni Teklif Talebi - ${fields.name}`,
       replyTo: fields.email,
