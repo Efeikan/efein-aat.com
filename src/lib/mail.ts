@@ -438,10 +438,9 @@ async function postFormSubmit(to: string, payload: Record<string, string>) {
 }
 
 async function sendViaFormSubmit(options: SendMailOptions) {
-  // Aktivasyon mailinin düşeceği adresler (Hostinger kutusu)
+  // FormSubmit ş karakterini reddediyor → ASCII / Punycode kullan
   const recipients = uniqueEmails([
     options.to?.trim() || "",
-    DISPLAY_EMAIL,
     ASCII_EMAIL,
     PUNYCODE_RW,
     CONTACT_EMAIL,
