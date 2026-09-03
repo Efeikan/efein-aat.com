@@ -1,4 +1,4 @@
-export const SITE_URL = "https://efeinsaat.com";
+export { SITE_URL } from "@/lib/site";
 
 export const SERVICE_SLUGS = [
   "cam-balkon",

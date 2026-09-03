@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const SITE_URL = "https://efeinsaat.com";
+import { SITE_HOST_ASCII, SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
+    host: SITE_HOST_ASCII,
   };
 }

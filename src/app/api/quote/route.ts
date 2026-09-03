@@ -6,11 +6,9 @@ import {
   sendMail,
   toClientMailError,
 } from "@/lib/mail";
+import { SITE_DISPLAY, SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
-
-const SITE_URL = "https://efeinsaat.com";
-const SITE_DISPLAY = "efeinsaat.com";
 
 function buildQuoteEmailHtml(fields: Record<string, string>, fileName?: string) {
   const rows = [

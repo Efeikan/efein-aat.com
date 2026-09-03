@@ -1,20 +1,23 @@
 /**
  * Cloudflare Workers uyumlu mail: yalnızca Resend HTTP API.
  * FormSubmit / SMTP yok.
+ *
+ * Domain: efeinşaat.com (IDN) → Resend’e xn--efeinaat-rwb.com olarak gider.
  */
+import {
+  DISPLAY_EMAIL,
+  RESEND_EMAIL,
+  SITE_HOST_ASCII,
+} from "@/lib/site";
 
-/** UI / imza için Türkçe karakterli görünen adres */
-export const DISPLAY_EMAIL = "info@efeinşaat.com";
-
-/** Resend’e giden gerçek adres (ASCII domain — doğrulanmış efeinsaat.com) */
-export const RESEND_EMAIL = "info@efeinsaat.com";
+export { DISPLAY_EMAIL, RESEND_EMAIL };
 
 export const CONTACT_EMAIL =
   process.env.CONTACT_EMAIL?.trim() || DISPLAY_EMAIL;
 
 /**
- * Resend yalnızca ASCII e-posta / doğrulanmış domain kabul eder.
- * efeinşaat.com (IDN) → efeinsaat.com (ASCII) olarak zorlanır.
+ * Resend yalnızca ASCII e-posta kabul eder.
+ * efeinşaat.com / efeinsaat.com → xn--efeinaat-rwb.com (doğrulanmış IDN).
  */
 export function toAsciiEmail(email: string): string {
   const trimmed = email.trim();
@@ -24,21 +27,21 @@ export function toAsciiEmail(email: string): string {
   const local = trimmed.slice(0, at);
   let domain = trimmed.slice(at + 1).toLowerCase();
 
-  // Bilinen marka domain eşlemeleri
+  // Marka domaininin tüm yazımlarını Punycode IDN’e çevir
   if (
     domain === "efeinşaat.com" ||
+    domain === "efeinsaat.com" ||
     domain === "xn--efeinaat-rwb.com"
   ) {
-    domain = "efeinsaat.com";
+    domain = SITE_HOST_ASCII;
   } else {
     try {
-      // hostname her zaman ASCII/punycode döner
       domain = new URL(`http://${domain}`).hostname;
     } catch {
       // domain olduğu gibi kalır
     }
-    if (domain === "xn--efeinaat-rwb.com") {
-      domain = "efeinsaat.com";
+    if (domain === "efeinsaat.com") {
+      domain = SITE_HOST_ASCII;
     }
   }
 
@@ -49,7 +52,6 @@ export function toAsciiEmail(email: string): string {
 function toAsciiDisplayName(name: string): string {
   return name
     .replace(/İ/g, "I")
-    .replace(/I/g, "I")
     .replace(/ı/g, "i")
     .replace(/Ş/g, "S")
     .replace(/ş/g, "s")
@@ -264,7 +266,6 @@ export async function sendMail(options: SendMailOptions) {
 
   await resendSend(payload);
 
-  // Formu dolduran kullanıcıya teşekkür / onay maili
   if (options.customerConfirmation) {
     const c = options.customerConfirmation;
     await resendSend({

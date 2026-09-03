@@ -5,11 +5,9 @@ import {
   sendMail,
   toClientMailError,
 } from "@/lib/mail";
+import { SITE_DISPLAY, SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
-
-const SITE_URL = "https://efeinsaat.com";
-const SITE_DISPLAY = "efeinsaat.com";
 
 function buildEmailHtml(name: string, email: string, phone: string, message: string) {
   const safeName = escapeHtml(name);

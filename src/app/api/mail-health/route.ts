@@ -17,7 +17,7 @@ export async function GET() {
     tips: [
       "Canlı log: npx wrangler tail",
       "Resend: https://resend.com/api-keys",
-      "onboarding@resend.dev ile testte alıcı genelde Resend hesap e-postanızdır; domain doğrulayınca info@efeinsaat.com’a serbestçe gider",
+      "onboarding@resend.dev ile testte alıcı genelde Resend hesap e-postanızdır; domain doğrulayınca info@xn--efeinaat-rwb.com (efeinşaat.com) serbestçe gider",
     ],
   });
 }
