@@ -6,7 +6,13 @@
     "gallery": "Gallery",
     "testimonials": "Reviews",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "serviceItems": {
+      "cam-balkon": "Glass Balcony",
+      "pergole": "Pergola",
+      "pimapen": "PVC Windows",
+      "sineklik": "Insect Screens"
+    }
   },
   "hero": {
     "title": "Transform Your",
@@ -137,96 +143,97 @@
       }
     }
   },
-  "services": {
-    "sectionTag": "Our Services",
-    "title": "Shaping the Future with Efe İnşaat Expertise",
-    "subtitle": "End-to-end services—from turnkey projects and urban transformation to engineering consultancy and interior architecture.",
-    "heroImageAlt": "Efe İnşaat project and construction sites",
-    "categoriesLabel": "Areas of Expertise",
-    "categoriesTitle": "Construction solutions, start to finish",
-    "categoriesSubtitle": "From homes and commercial buildings to land development and project management—the same care and transparency at every stage.",
+  "servicePages": {
     "badges": [
-      "100% Earthquake-Code Compliant",
-      "On-Time Delivery Guarantee",
+      "Free Survey & Measurement",
+      "On-Time Installation",
       "15+ Years of Field Experience"
     ],
-    "items": [
-      {
-        "title": "Residential & Commercial Construction",
-        "description": "We deliver turnkey homes, modern living spaces, and business centers from measurement to handover. PVC windows, glass balconies, and facade systems are planned into the project from day one.",
-        "features": ["Turnkey buildings", "Modern living spaces", "Offices and business centers", "Facade and joinery integration"]
-      },
-      {
-        "title": "Urban Transformation & Building Renewal",
-        "description": "We renew existing buildings with modern methods that meet current earthquake codes. For at-risk structures, we manage strengthening or rebuilds within a clear legal framework.",
-        "features": ["Earthquake-code compliance", "At-risk building renewal", "Strengthening and renovation", "Legal process tracking"]
-      },
-      {
-        "title": "Land-for-Flat Development",
-        "description": "We create high-upside project solutions tailored to landowners. Share ratios, zoning analysis, and delivery timelines are made explicit so the partnership stays fair and durable.",
-        "features": ["Zoning and rights analysis", "Transparent land-for-flat model", "Value-focused design", "Contract and delivery assurance"]
-      },
-      {
-        "title": "Architectural Design & Interior Fit-Out",
-        "description": "We develop functional, aesthetic, and innovative spaces. From planning to detailing, designs follow how you live—with balanced materials and light.",
-        "features": ["Functional planning", "Interior fit-out", "Material and lighting selection", "Custom-sized systems"]
-      },
-      {
-        "title": "Project Management & Contracting",
-        "description": "We run professional site management around budget, time, and quality. Reporting, procurement, and safety sit under one roof throughout the contract.",
-        "features": ["Budget and schedule control", "Site management", "Procurement and quality checks", "Occupational safety discipline"]
-      },
-      {
-        "title": "Infrastructure & Industrial Buildings",
-        "description": "We build durable, scalable industrial plants, warehouses, and infrastructure. Delivery follows technical specs without disrupting operations.",
-        "features": ["Industrial facilities", "Warehouse and logistics buildings", "Infrastructure works", "Technical specification compliance"]
-      }
-    ],
     "learnMore": "Learn More",
-    "process": {
-      "sectionTag": "How We Work",
-      "title": "Our process",
-      "subtitle": "From survey to handover, every step is planned, measurable, and shared with you.",
-      "steps": [
-        {
-          "title": "Survey & Planning",
-          "description": "We measure on site, map your needs, and lock a budget and timeline together."
-        },
-        {
-          "title": "Design & Permitting",
-          "description": "We present the design for approval and handle legal and permit steps on your behalf."
-        },
-        {
-          "title": "Quality Production & Site Work",
-          "description": "We run production with material, workmanship, and safety standards under tight control."
-        },
-        {
-          "title": "On-Time Handover",
-          "description": "We deliver on the contracted date and close with warranty and after-sales support."
-        }
-      ]
+    "cam-balkon": {
+      "sectionTag": "Our Services",
+      "h1": "Glass Balcony Systems",
+      "intro": "Sliding and folding glass balcony systems turn your balcony into a living space you can use year-round.",
+      "body": [
+        "Glass balconies protect open balconies from wind, rain, and dust while expanding usable space. At Efe İnşaat we provide measurement, fabrication, and installation for sliding and folding glass balcony systems across Ataşehir and Istanbul.",
+        "Insulated-glass options help you use the balcony more comfortably in winter. Contact us for a free survey and a clear quote matched to your project."
+      ],
+      "featuresTitle": "Our glass balcony solutions",
+      "features": [
+        "Sliding glass balcony systems",
+        "Folding glass balcony models",
+        "Insulated glass options",
+        "Custom fabrication and installation"
+      ],
+      "ctaTitle": "Get a Glass Balcony Quote",
+      "ctaDescription": "Request a free survey—we'll recommend a suitable model and prepare a clear price quote.",
+      "ctaButton": "Go to Quote Form",
+      "relatedTitle": "Related Services",
+      "relatedSubtitle": "Explore other systems that complete your living spaces."
     },
-    "faq": {
-      "sectionTag": "FAQ",
-      "title": "About our services",
-      "items": [
-        {
-          "question": "How does a land-for-flat agreement work?",
-          "answer": "We first analyze zoning and your rights, then propose a transparent share model. The contract, project approval, and delivery calendar are put in writing, with regular updates throughout."
-        },
-        {
-          "question": "Which quality and safety standards do you apply?",
-          "answer": "All work follows current earthquake codes, material standards, and occupational safety rules. Quality checks, documented procurement, and a pre-handover checklist keep the process auditable."
-        },
-        {
-          "question": "Do you manage permits and legal steps in urban transformation?",
-          "answer": "Yes. After the at-risk building assessment, we coordinate municipality, permit, and paperwork on your behalf. Required documents are listed clearly, and communication stays in one place."
-        }
-      ]
+    "pergole": {
+      "sectionTag": "Our Services",
+      "h1": "Pergola Systems",
+      "intro": "Aluminum, wood-look, and bioclimatic pergola systems turn terraces and gardens into shaded, usable outdoor rooms.",
+      "body": [
+        "Pergola systems provide controlled shade and weather protection for terraces, gardens, and outdoor seating. Efe İnşaat delivers aluminum, wood-look, and bioclimatic pergola projects with professional installation.",
+        "Bioclimatic pergolas use adjustable louvers to control light and airflow. Motorized options can be operated by remote. Reach out for survey and pricing."
+      ],
+      "featuresTitle": "Our pergola solutions",
+      "features": [
+        "Aluminum pergola systems",
+        "Wood-look pergola models",
+        "Bioclimatic / motorized pergolas",
+        "Terrace and garden installations"
+      ],
+      "ctaTitle": "Get a Pergola Quote",
+      "ctaDescription": "We'll help choose the right pergola for your terrace or garden—with a free survey and clear pricing.",
+      "ctaButton": "Go to Quote Form",
+      "relatedTitle": "Related Services",
+      "relatedSubtitle": "Discover our other outdoor and facade solutions."
     },
-    "ctaTitle": "Get a Proposal for Your Land or Project",
-    "ctaDescription": "Send a survey request—we'll map a clear path for land-for-flat, urban transformation, or turnkey construction.",
-    "ctaButton": "Go to Proposal Form"
+    "pimapen": {
+      "sectionTag": "Our Services",
+      "h1": "PVC Window & Door Systems",
+      "intro": "Insulated PVC window and door systems create comfortable, energy-efficient living spaces.",
+      "body": [
+        "PVC window and door systems (often called pimapen in Turkey) offer thermal and acoustic comfort with long service life. Efe İnşaat provides custom measurement, fabrication, and professional installation in Ataşehir and Istanbul.",
+        "With proper care, quality PVC systems can serve for many years. Request a free survey for new installs or window replacements."
+      ],
+      "featuresTitle": "Our PVC solutions",
+      "features": [
+        "PVC window systems",
+        "PVC door applications",
+        "Thermal and acoustic-focused choices",
+        "Replacement and renovation installs"
+      ],
+      "ctaTitle": "Get a PVC Windows Quote",
+      "ctaDescription": "Request a free survey for your window and door needs—clear pricing and model guidance included.",
+      "ctaButton": "Go to Quote Form",
+      "relatedTitle": "Related Services",
+      "relatedSubtitle": "Explore our balcony and facade systems as well."
+    },
+    "sineklik": {
+      "sectionTag": "Our Services",
+      "h1": "Insect Screen Systems",
+      "intro": "Pleated, sliding, and hinged insect screens keep bugs out while letting fresh air in.",
+      "body": [
+        "Insect screens protect windows and doors from insects without blocking ventilation. Efe İnşaat installs pleated, sliding, and hinged screen systems with accurate on-site measurement.",
+        "Standard window screens are often measured and installed the same day. Door screens and special systems may take longer depending on the model. Contact us for pricing and installation details."
+      ],
+      "featuresTitle": "Our insect screen solutions",
+      "features": [
+        "Pleated insect screens",
+        "Sliding screen systems",
+        "Hinged screen models",
+        "Window and door applications"
+      ],
+      "ctaTitle": "Get an Insect Screen Quote",
+      "ctaDescription": "Request free measurement and pricing for window or door insect screens.",
+      "ctaButton": "Go to Quote Form",
+      "relatedTitle": "Related Services",
+      "relatedSubtitle": "Also explore PVC windows, glass balconies, and pergolas."
+    }
   },
   "gallery": {
     "sectionTag": "Gallery",
@@ -306,6 +313,8 @@
       "submit": "Send Message",
       "sending": "Sending...",
       "success": "Your message has been sent successfully!",
+      "successTitle": "Message sent",
+      "successBody": "The Efe İnşaat team will get back to you as soon as possible.",
       "error": "Message could not be sent. Please try again.",
       "namePlaceholder": "Enter your name",
       "emailPlaceholder": "example@email.com",

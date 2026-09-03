@@ -4,6 +4,9 @@ export const metadata: Metadata = {
   title: "Hakkımızda",
   description:
     "Efe İnşaat: Geleceği güvenle inşa eden bir başarı hikayesi. Kalite, zamanında teslimat ve sürdürülebilir çözümlerle Ataşehir & İstanbul.",
+  alternates: {
+    canonical: "/hakkimizda",
+  },
 };
 
 export default function HakkimizdaLayout({

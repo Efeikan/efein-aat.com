@@ -7,14 +7,78 @@ import { X, ZoomIn } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 const galleryItems = [
-  { id: 1, category: "pimapen", image: "/images/gallery/pimapen-1.jpg" },
-  { id: 2, category: "cam-balkon", image: "/images/gallery/cam-balkon-1.jpg" },
-  { id: 3, category: "pergole", image: "/images/gallery/pergole-1.jpg" },
-  { id: 4, category: "sineklik", image: "/images/gallery/sineklik-1.jpg" },
-  { id: 5, category: "pimapen", image: "/images/gallery/pimapen-2.jpg" },
-  { id: 6, category: "cam-balkon", image: "/images/gallery/cam-balkon-2.jpg" },
-  { id: 7, category: "pergole", image: "/images/gallery/pergole-2.jpg" },
-  { id: 8, category: "sineklik", image: "/images/gallery/sineklik-2.jpg" },
+  {
+    id: 1,
+    category: "pimapen",
+    image: "/images/gallery/pimapen-1.jpg",
+    alt: {
+      tr: "Efe İnşaat pimapen PVC pencere uygulama örneği",
+      en: "Efe İnşaat PVC window installation example",
+    },
+  },
+  {
+    id: 2,
+    category: "cam-balkon",
+    image: "/images/gallery/cam-balkon-1.jpg",
+    alt: {
+      tr: "Efe İnşaat sürme cam balkon uygulama örneği",
+      en: "Efe İnşaat sliding glass balcony installation example",
+    },
+  },
+  {
+    id: 3,
+    category: "pergole",
+    image: "/images/gallery/pergole-1.jpg",
+    alt: {
+      tr: "Efe İnşaat alüminyum pergole projesi",
+      en: "Efe İnşaat aluminum pergola project",
+    },
+  },
+  {
+    id: 4,
+    category: "sineklik",
+    image: "/images/gallery/sineklik-1.jpg",
+    alt: {
+      tr: "Efe İnşaat sineklik sistemi uygulama örneği",
+      en: "Efe İnşaat insect screen installation example",
+    },
+  },
+  {
+    id: 5,
+    category: "pimapen",
+    image: "/images/gallery/pimapen-2.jpg",
+    alt: {
+      tr: "Efe İnşaat PVC pencere ve kapı montaj örneği",
+      en: "Efe İnşaat PVC window and door installation example",
+    },
+  },
+  {
+    id: 6,
+    category: "cam-balkon",
+    image: "/images/gallery/cam-balkon-2.jpg",
+    alt: {
+      tr: "Efe İnşaat katlanır cam balkon uygulama örneği",
+      en: "Efe İnşaat folding glass balcony installation example",
+    },
+  },
+  {
+    id: 7,
+    category: "pergole",
+    image: "/images/gallery/pergole-2.jpg",
+    alt: {
+      tr: "Efe İnşaat teras pergole uygulama örneği",
+      en: "Efe İnşaat terrace pergola installation example",
+    },
+  },
+  {
+    id: 8,
+    category: "sineklik",
+    image: "/images/gallery/sineklik-2.jpg",
+    alt: {
+      tr: "Efe İnşaat pileli sineklik montaj örneği",
+      en: "Efe İnşaat pleated insect screen installation example",
+    },
+  },
 ];
 
 const categoryLabels: Record<string, Record<string, string>> = {
@@ -63,7 +127,7 @@ export default function Gallery() {
               >
                 <Image
                   src={item.image}
-                  alt={categoryLabels[item.category][language]}
+                  alt={item.alt[language]}
                   fill
                   sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -103,7 +167,7 @@ export default function Gallery() {
           >
             <Image
               src={galleryItems[lightbox].image}
-              alt={categoryLabels[galleryItems[lightbox].category][language]}
+              alt={galleryItems[lightbox].alt[language]}
               fill
               sizes="(min-width: 768px) 640px, 100vw"
               className="object-cover"

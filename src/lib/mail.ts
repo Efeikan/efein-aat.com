@@ -2,10 +2,52 @@
  * Cloudflare Workers uyumlu mail: yalnızca Resend HTTP API.
  * FormSubmit / SMTP yok.
  */
-export const CONTACT_EMAIL =
-  process.env.CONTACT_EMAIL?.trim() || "info@efeinsaat.com";
+import { domainToASCII } from "node:url";
 
-export const DISPLAY_EMAIL = "info@efeinsaat.com";
+export const DISPLAY_EMAIL = "info@efeinşaat.com";
+
+export const CONTACT_EMAIL =
+  process.env.CONTACT_EMAIL?.trim() || DISPLAY_EMAIL;
+
+/** Resend API yalnızca ASCII e-posta kabul eder; IDN domain punycode'a çevrilir. */
+export function toAsciiEmail(email: string): string {
+  const trimmed = email.trim();
+  const at = trimmed.lastIndexOf("@");
+  if (at <= 0) return trimmed;
+  const local = trimmed.slice(0, at);
+  const domain = trimmed.slice(at + 1);
+  const asciiDomain = domainToASCII(domain);
+  return asciiDomain ? `${local}@${asciiDomain}` : trimmed;
+}
+
+function normalizeAddressForResend(address: string): string {
+  const trimmed = address.trim();
+  const angle = trimmed.match(/^(.+?)\s*<([^>]+)>$/);
+  if (angle) {
+    return `${angle[1].trim()} <${toAsciiEmail(angle[2].trim())}>`;
+  }
+  return toAsciiEmail(trimmed);
+}
+
+function normalizeResendPayload(payload: Record<string, unknown>) {
+  const out = { ...payload };
+  if (typeof out.from === "string") {
+    out.from = normalizeAddressForResend(out.from);
+  }
+  if (Array.isArray(out.to)) {
+    out.to = out.to.map((entry) =>
+      typeof entry === "string" ? normalizeAddressForResend(entry) : entry
+    );
+  }
+  if (typeof out.reply_to === "string") {
+    out.reply_to = normalizeAddressForResend(out.reply_to);
+  } else if (Array.isArray(out.reply_to)) {
+    out.reply_to = out.reply_to.map((entry) =>
+      typeof entry === "string" ? normalizeAddressForResend(entry) : entry
+    );
+  }
+  return out;
+}
 
 type Attachment = {
   filename: string;
@@ -65,7 +107,10 @@ export function toClientMailError(error: unknown): string {
   if (/RESEND_API_KEY|tanımlı değil|eksik/i.test(msg)) {
     return "Mail yapılandırması eksik (RESEND_API_KEY). Lütfen daha sonra tekrar deneyin.";
   }
-  if (/domain|from|not verified|validation/i.test(msg)) {
+  if (/only send testing emails to your own email/i.test(msg)) {
+    return "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin veya e-posta ile ulaşın.";
+  }
+  if (/domain|from|not verified|validation|non-ascii/i.test(msg)) {
     return "Gönderen adresi doğrulanamadı. Lütfen daha sonra tekrar deneyin.";
   }
   return "Mesaj gönderilemedi. Lütfen daha sonra tekrar deneyin veya e-posta ile ulaşın.";
@@ -85,13 +130,15 @@ async function resendSend(payload: Record<string, unknown>) {
     subject: payload.subject,
   });
 
+  const normalized = normalizeResendPayload(payload);
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(normalized),
     signal: AbortSignal.timeout(TIMEOUT_MS),
   });
 
@@ -165,7 +212,8 @@ export async function sendMail(options: SendMailOptions) {
 
   await resendSend(payload);
 
-  if (options.customerConfirmation && !options.to) {
+  // Formu dolduran kullanıcıya teşekkür / onay maili (info@ üzerinden)
+  if (options.customerConfirmation) {
     const c = options.customerConfirmation;
     await resendSend({
       from,

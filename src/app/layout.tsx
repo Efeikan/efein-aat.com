@@ -4,6 +4,8 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { CookieConsent } from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import ScrollToTop from "@/components/ScrollToTop";
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/services";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,12 +18,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = "https://efeinsaat.com";
 const SITE_NAME = "Efe İnşaat";
 const TITLE =
-  "Efe İnşaat | Ataşehir Pimapen, Cam Balkon, Pergole ve Sineklik Firması";
+  "Efe İnşaat | Cam Balkon, Pergole, Pimapen ve Sineklik Sistemleri";
 const DESCRIPTION =
-  "Efe İnşaat, Ataşehir ve İstanbul genelinde pimapen (PVC pencere), cam balkon, pergole ve sineklik sistemlerinde 15+ yıllık deneyimiyle hizmet veren güvenilir inşaat firmasıdır. Ücretsiz keşif için: info@efeinşaat.com.";
+  "Cam balkon, pergole, pimapen ve sineklik sistemlerinde uzman çözümler. Ataşehir & İstanbul'da ücretsiz keşif ve montaj için Efe İnşaat'ı arayın.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -126,11 +127,42 @@ export const metadata: Metadata = {
   // verification: { google: "GOOGLE_SITE_VERIFICATION_KODU" },
 };
 
+const testimonials = [
+  {
+    name: "Ahmet Yılmaz",
+    role: "Ev Sahibi",
+    text: "Pimapen değişimi için Efe İnşaat'ı tercih ettik. Hem kaliteli malzeme hem de profesyonel işçilik. Çok memnunuz.",
+    rating: 5,
+  },
+  {
+    name: "Fatma Demir",
+    role: "İşletme Sahibi",
+    text: "Cam balkon sistemimiz harika oldu. Kışın bile balkonumuzu rahatlıkla kullanabiliyoruz. Teşekkürler Efe İnşaat!",
+    rating: 5,
+  },
+  {
+    name: "Mehmet Kaya",
+    role: "Villa Sahibi",
+    text: "Pergole sistemimiz tam istediğimiz gibi oldu. Biyoklimatik pergole sayesinde terasımız yaşam alanına dönüştü.",
+    rating: 5,
+  },
+  {
+    name: "Ayşe Çelik",
+    role: "Apartman Yöneticisi",
+    text: "Tüm daire pencerelerine sineklik taktırdık. Ölçü alma ve montaj sürecinde çok titiz çalıştılar.",
+    rating: 4,
+  },
+];
+
+const averageRating =
+  testimonials.reduce((sum, item) => sum + item.rating, 0) /
+  testimonials.length;
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": ["LocalBusiness", "GeneralContractor"],
+      "@type": "HomeAndConstructionBusiness",
       "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
       alternateName: ["Efe İnşaat", "EfeInsaat", "Efe İnşaat Ataşehir"],
@@ -151,10 +183,7 @@ const jsonLd = {
         latitude: 40.9923,
         longitude: 29.1244,
       },
-      areaServed: [
-        { "@type": "City", name: "İstanbul" },
-        { "@type": "Place", name: "Ataşehir" },
-      ],
+      areaServed: "TR",
       openingHoursSpecification: [
         {
           "@type": "OpeningHoursSpecification",
@@ -170,23 +199,43 @@ const jsonLd = {
           closes: "18:00",
         },
       ],
-      sameAs: [],
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: averageRating.toFixed(2),
+        bestRating: "5",
+        worstRating: "1",
+        reviewCount: String(testimonials.length),
+      },
+      review: testimonials.map((item) => ({
+        "@type": "Review",
+        author: {
+          "@type": "Person",
+          name: item.name,
+        },
+        reviewBody: item.text,
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: String(item.rating),
+          bestRating: "5",
+          worstRating: "1",
+        },
+      })),
       makesOffer: [
         {
           "@type": "Offer",
-          itemOffered: { "@type": "Service", name: "Pimapen (PVC Pencere) Sistemleri" },
+          itemOffered: { "@type": "Service", name: "Cam Balkon" },
         },
         {
           "@type": "Offer",
-          itemOffered: { "@type": "Service", name: "Cam Balkon Sistemleri" },
+          itemOffered: { "@type": "Service", name: "Pergole" },
         },
         {
           "@type": "Offer",
-          itemOffered: { "@type": "Service", name: "Pergole Sistemleri" },
+          itemOffered: { "@type": "Service", name: "Pimapen" },
         },
         {
           "@type": "Offer",
-          itemOffered: { "@type": "Service", name: "Sineklik Sistemleri" },
+          itemOffered: { "@type": "Service", name: "Sineklik" },
         },
       ],
     },
@@ -262,15 +311,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" className="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[var(--bg-primary)] text-[var(--text-primary)]`}
       >
+        <JsonLd data={jsonLd} />
         <LanguageProvider>
           <ScrollToTop />
           <GoogleAnalytics />

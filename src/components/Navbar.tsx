@@ -1,25 +1,29 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Building2, Mail } from "lucide-react";
+import { Menu, X, Building2, Mail, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import LanguageToggle from "./LanguageToggle";
+import { SERVICE_SLUGS } from "@/lib/services";
 
 const navLinks = [
   { key: "home", href: "/#hero" },
   { key: "about", href: "/hakkimizda" },
-  { key: "services", href: "/hizmetlerimiz" },
+  { key: "services", href: "/hizmetlerimiz/cam-balkon", hasDropdown: true },
   { key: "gallery", href: "/#gallery" },
   { key: "testimonials", href: "/#testimonials" },
   { key: "faq", href: "/#faq" },
   { key: "contact", href: "/#contact" },
-];
+] as const;
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
   const pathname = usePathname();
   const router = useRouter();
@@ -30,8 +34,23 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        servicesRef.current &&
+        !servicesRef.current.contains(event.target as Node)
+      ) {
+        setServicesOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const navigate = (href: string) => {
     setIsOpen(false);
+    setServicesOpen(false);
+    setMobileServicesOpen(false);
 
     if (href.startsWith("/#") || href.startsWith("#")) {
       const hash = href.includes("#") ? `#${href.split("#")[1]}` : href;
@@ -44,7 +63,6 @@ export default function Navbar() {
     }
 
     router.push(href);
-    // Sayfa değişiminde üste al (hash'li iç linkler hariç)
     if (!href.includes("#")) {
       const html = document.documentElement;
       const previous = html.style.scrollBehavior;
@@ -61,6 +79,14 @@ export default function Navbar() {
       }, 50);
     }
   };
+
+  const serviceLinks = SERVICE_SLUGS.map((slug) => ({
+    slug,
+    href: `/hizmetlerimiz/${slug}`,
+    label: t(`nav.serviceItems.${slug}`) as string,
+  }));
+
+  const isServicesActive = pathname.startsWith("/hizmetlerimiz");
 
   return (
     <>
@@ -119,19 +145,83 @@ export default function Navbar() {
             </a>
 
             <div className="hidden lg:flex items-center gap-0.5">
-              {navLinks.map((link) => (
-                <a
-                  key={link.key}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate(link.href);
-                  }}
-                  className="px-3.5 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)] hover:text-primary-400 transition-colors rounded-md hover:bg-primary-900/10"
-                >
-                  {t(`nav.${link.key}`) as string}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                if ("hasDropdown" in link && link.hasDropdown) {
+                  return (
+                    <div
+                      key={link.key}
+                      ref={servicesRef}
+                      className="relative"
+                      onMouseEnter={() => setServicesOpen(true)}
+                      onMouseLeave={() => setServicesOpen(false)}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setServicesOpen((open) => !open)}
+                        className={`inline-flex items-center gap-1 px-3.5 py-2 text-xs font-semibold uppercase tracking-wide transition-colors rounded-md hover:bg-primary-900/10 ${
+                          isServicesActive
+                            ? "text-primary-400"
+                            : "text-[var(--text-secondary)] hover:text-primary-400"
+                        }`}
+                        aria-expanded={servicesOpen}
+                        aria-haspopup="true"
+                      >
+                        {t(`nav.${link.key}`) as string}
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 transition-transform ${
+                            servicesOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                      <AnimatePresence>
+                        {servicesOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 8 }}
+                            transition={{ duration: 0.18 }}
+                            className="absolute left-0 top-full pt-2 min-w-[220px]"
+                          >
+                            <div className="rounded-xl border border-[var(--border-color)] bg-[var(--bg-primary)]/98 backdrop-blur-xl shadow-xl shadow-black/30 py-2">
+                              {serviceLinks.map((item) => (
+                                <a
+                                  key={item.slug}
+                                  href={item.href}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate(item.href);
+                                  }}
+                                  className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
+                                    pathname === item.href
+                                      ? "text-primary-400 bg-primary-900/15"
+                                      : "text-[var(--text-secondary)] hover:text-primary-400 hover:bg-primary-900/10"
+                                  }`}
+                                >
+                                  {item.label}
+                                </a>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                }
+
+                return (
+                  <a
+                    key={link.key}
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(link.href);
+                    }}
+                    className="px-3.5 py-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-secondary)] hover:text-primary-400 transition-colors rounded-md hover:bg-primary-900/10"
+                  >
+                    {t(`nav.${link.key}`) as string}
+                  </a>
+                );
+              })}
             </div>
 
             <div className="flex items-center gap-3">
@@ -166,19 +256,71 @@ export default function Navbar() {
               className="lg:hidden bg-[var(--bg-primary)]/98 backdrop-blur-xl border-b border-[var(--border-color)] overflow-hidden"
             >
               <div className="px-4 py-3 space-y-1">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.key}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      navigate(link.href);
-                    }}
-                    className="block px-4 py-2.5 text-base font-medium text-[var(--text-secondary)] hover:text-primary-400 hover:bg-primary-900/10 rounded-lg transition-colors"
-                  >
-                    {t(`nav.${link.key}`) as string}
-                  </a>
-                ))}
+                {navLinks.map((link) => {
+                  if ("hasDropdown" in link && link.hasDropdown) {
+                    return (
+                      <div key={link.key} className="space-y-1">
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setMobileServicesOpen((open) => !open)
+                          }
+                          className="flex w-full items-center justify-between px-4 py-2.5 text-base font-medium text-[var(--text-secondary)] hover:text-primary-400 hover:bg-primary-900/10 rounded-lg transition-colors"
+                          aria-expanded={mobileServicesOpen}
+                        >
+                          {t(`nav.${link.key}`) as string}
+                          <ChevronDown
+                            className={`w-4 h-4 transition-transform ${
+                              mobileServicesOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {mobileServicesOpen && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              className="overflow-hidden pl-3 space-y-1"
+                            >
+                              {serviceLinks.map((item) => (
+                                <a
+                                  key={item.slug}
+                                  href={item.href}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    navigate(item.href);
+                                  }}
+                                  className={`block px-4 py-2 text-sm rounded-lg transition-colors ${
+                                    pathname === item.href
+                                      ? "text-primary-400 bg-primary-900/15"
+                                      : "text-[var(--text-secondary)] hover:text-primary-400 hover:bg-primary-900/10"
+                                  }`}
+                                >
+                                  {item.label}
+                                </a>
+                              ))}
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <a
+                      key={link.key}
+                      href={link.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate(link.href);
+                      }}
+                      className="block px-4 py-2.5 text-base font-medium text-[var(--text-secondary)] hover:text-primary-400 hover:bg-primary-900/10 rounded-lg transition-colors"
+                    >
+                      {t(`nav.${link.key}`) as string}
+                    </a>
+                  );
+                })}
               </div>
             </motion.div>
           )}

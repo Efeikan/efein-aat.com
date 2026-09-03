@@ -6,7 +6,13 @@
     "gallery": "Galeri",
     "testimonials": "Yorumlar",
     "faq": "SSS",
-    "contact": "İletişim"
+    "contact": "İletişim",
+    "serviceItems": {
+      "cam-balkon": "Cam Balkon",
+      "pergole": "Pergole",
+      "pimapen": "Pimapen",
+      "sineklik": "Sineklik"
+    }
   },
   "hero": {
     "title": "Yaşam Alanlarınızı",
@@ -137,96 +143,97 @@
       }
     }
   },
-  "services": {
-    "sectionTag": "Hizmetlerimiz",
-    "title": "Efe İnşaat Uzmanlığıyla Geleceği Şekillendiriyoruz",
-    "subtitle": "Anahtar teslim projelerden kentsel dönüşüme, mühendislik danışmanlığından iç mimariye kadar sunduğumuz uçtan uca hizmetler.",
-    "heroImageAlt": "Efe İnşaat proje ve şantiye uygulamaları",
-    "categoriesLabel": "Uzmanlık Alanlarımız",
-    "categoriesTitle": "Uçtan uca inşaat çözümleri",
-    "categoriesSubtitle": "Konuttan ticarete, arsa değerlendirmeden proje yönetimine kadar her aşamada aynı titizlik ve şeffaflık.",
+  "servicePages": {
     "badges": [
-      "%100 Deprem Yönetmeliğine Uygun",
-      "Zamanında Teslim Garantisi",
+      "Ücretsiz Keşif ve Ölçü",
+      "Zamanında Montaj",
       "15+ Yıllık Saha Deneyimi"
     ],
-    "items": [
-      {
-        "title": "Konut ve Ticari Proje İnşaatı",
-        "description": "Anahtar teslim konutlar, modern yaşam alanları ve iş merkezlerinde; ölçüden teslimata kadar tek elden, kalite odaklı üretim yapıyoruz. Pimapen, cam balkon ve cephe sistemlerini de projeye entegre ederek yaşam konforunu baştan planlıyoruz.",
-        "features": ["Anahtar teslim yapılar", "Modern yaşam alanları", "İş merkezi ve ofis projeleri", "Cephe ve doğrama entegrasyonu"]
-      },
-      {
-        "title": "Kentsel Dönüşüm ve Yapı Yenileme",
-        "description": "Eski yapıları güncel deprem yönetmeliğine uygun, modern yöntemlerle yeniliyoruz. Riskli binalarda güçlendirme veya yeniden inşa süreçlerini yasal çerçeveyle, şeffaf iletişimle yönetiyoruz.",
-        "features": ["Deprem yönetmeliğine uyum", "Riskli yapı yenileme", "Güçlendirme ve tadilat", "Yasal süreç takibi"]
-      },
-      {
-        "title": "Kat Karşılığı Arsa Değerlendirme",
-        "description": "Arsa sahiplerine özel, yüksek prim potansiyeline sahip proje çözümleri üretiyoruz. Hak paylaşımı, imar analizi ve teslim takvimini netleştirerek adil ve sürdürülebilir bir iş ortaklığı kuruyoruz.",
-        "features": ["İmar ve hak analizi", "Şeffaf kat karşılığı model", "Yüksek prim odaklı tasarım", "Sözleşme ve teslim güvencesi"]
-      },
-      {
-        "title": "Mimari Tasarım ve İç Mimari Uygulamaları",
-        "description": "Fonksiyonel, estetik ve yenilikçi mekan tasarımları geliştiriyoruz. Planlamadan uygulama detayına kadar yaşam alışkanlıklarınıza uyan, malzeme ve ışık dengesini gözeten çözümler sunuyoruz.",
-        "features": ["Fonksiyonel planlama", "İç mimari uygulama", "Malzeme ve ışık seçimi", "Özel ölçü sistemler"]
-      },
-      {
-        "title": "Proje Yönetimi ve Taahhüt Hizmetleri",
-        "description": "Bütçe, zaman ve kalite üçgeninde profesyonel şantiye yönetimi sağlıyoruz. Taahhüt süreçlerinde raporlama, tedarik ve iş güvenliği disiplinini tek çatı altında topluyoruz.",
-        "features": ["Bütçe ve zaman kontrolü", "Şantiye yönetimi", "Tedarik ve kalite denetimi", "İş güvenliği disiplini"]
-      },
-      {
-        "title": "Altyapı ve Endüstriyel Yapı Çözümleri",
-        "description": "Endüstriyel tesis, depo ve altyapı projelerinde dayanıklı, ölçeklenebilir yapılar inşa ediyoruz. Üretim sürekliliğini bozmadan, teknik şartnamelere sadık kalarak teslim ediyoruz.",
-        "features": ["Endüstriyel tesisler", "Depo ve lojistik yapılar", "Altyapı uygulamaları", "Teknik şartname uyumu"]
-      }
-    ],
     "learnMore": "Detaylı Bilgi",
-    "process": {
-      "sectionTag": "Hizmet Sürecimiz",
-      "title": "Nasıl çalışıyoruz?",
-      "subtitle": "Keşiften teslimata kadar her adım planlı, ölçülebilir ve sizinle paylaşılır.",
-      "steps": [
-        {
-          "title": "Keşif ve Planlama",
-          "description": "Sahada ölçü ve ihtiyaç analizi yapar, bütçe ve takvim taslağını birlikte netleştiririz."
-        },
-        {
-          "title": "Mimari Tasarım ve Ruhsatlandırma",
-          "description": "Tasarımı onayınıza sunar, yasal süreç ve ruhsat adımlarını sizin adınıza takip ederiz."
-        },
-        {
-          "title": "Kaliteli Üretim ve Şantiye",
-          "description": "Malzeme, işçilik ve iş güvenliği standartlarıyla üretimi disiplinli şekilde yönetiriz."
-        },
-        {
-          "title": "Zamanında Teslimat",
-          "description": "Sözleşilen sürede teslim eder, garanti ve satış sonrası destekle süreci kapatırız."
-        }
-      ]
+    "cam-balkon": {
+      "sectionTag": "Hizmetlerimiz",
+      "h1": "Cam Balkon Sistemleri",
+      "intro": "Sürme ve katlanır cam balkon sistemleriyle balkonunuzu dört mevsim kullanılabilir bir yaşam alanına dönüştürüyoruz.",
+      "body": [
+        "Cam balkon, açık balkonları rüzgar, yağmur ve toza karşı koruyarak kullanım alanınızı genişletir. Efe İnşaat olarak Ataşehir ve İstanbul genelinde sürme ve katlanır cam balkon modellerinde ölçü alma, imalat ve montaj hizmeti sunuyoruz.",
+        "Isıcamlı seçeneklerle kış aylarında da balkonunuzu daha konforlu kullanabilirsiniz. Projenize uygun sistem seçimi, ücretsiz keşif ve net fiyat teklifi için bizimle iletişime geçebilirsiniz."
+      ],
+      "featuresTitle": "Cam balkon çözümlerimiz",
+      "features": [
+        "Sürme cam balkon sistemleri",
+        "Katlanır cam balkon modelleri",
+        "Isıcamlı cam seçenekleri",
+        "Ölçüye özel imalat ve montaj"
+      ],
+      "ctaTitle": "Cam Balkon İçin Teklif Alın",
+      "ctaDescription": "Ücretsiz keşif talep edin; balkonunuza uygun cam balkon modeli ve fiyat teklifi hazırlayalım.",
+      "ctaButton": "Teklif Formuna Git",
+      "relatedTitle": "İlgili Hizmetler",
+      "relatedSubtitle": "Yaşam alanınızı tamamlayan diğer sistemlerimizi de inceleyebilirsiniz."
     },
-    "faq": {
-      "sectionTag": "Sıkça Sorulan Sorular",
-      "title": "Hizmetlerimiz hakkında",
-      "items": [
-        {
-          "question": "Kat karşılığı anlaşma süreçleri nasıl işliyor?",
-          "answer": "Önce arsanızın imar durumu ve haklarını analiz eder, paylaşım oranını şeffaf bir modelle sunarız. Sözleşme, proje onayı ve teslim takvimi yazılı hale gelir; süreç boyunca düzenli bilgilendirme yapılır."
-        },
-        {
-          "question": "Projelerinizde hangi kalite ve güvenlik standartlarını uyguluyorsunuz?",
-          "answer": "Tüm uygulamalarda güncel deprem yönetmeliği, malzeme standartları ve iş güvenliği kurallarına uyarız. Şantiyede kalite kontrol, kayıtlı tedarik ve teslim öncesi kontrol listesiyle süreci belgelendiririz."
-        },
-        {
-          "question": "Kentsel dönüşüm sürecinde ruhsat ve yasal süreçleri siz mi yönetiyorsunuz?",
-          "answer": "Evet. Riskli yapı tespiti sonrası belediye, ruhsat ve resmi evrak süreçlerini sizin adınıza koordine ederiz. Sizden beklenen belgeler net şekilde paylaşılır; iletişim tek noktadan yürür."
-        }
-      ]
+    "pergole": {
+      "sectionTag": "Hizmetlerimiz",
+      "h1": "Pergole Sistemleri",
+      "intro": "Alüminyum, ahşap ve bioklimatik pergole sistemleriyle teras ve bahçelerinizi gölgeli, kullanışlı dış mekânlara çeviriyoruz.",
+      "body": [
+        "Pergole sistemleri teras, bahçe ve açık oturma alanlarında güneş ve yağmura karşı kontrollü koruma sağlar. Efe İnşaat olarak alüminyum, ahşap görünümlü ve bioklimatik pergole çözümlerinde proje ve montaj hizmeti veriyoruz.",
+        "Biyoklimatik pergolelerde hareketli lameller sayesinde ışık ve hava sirkülasyonunu ihtiyacınıza göre ayarlayabilirsiniz. Motorlu seçenekler uzaktan kumanda ile kontrol edilebilir. Keşif ve fiyatlandırma için bize ulaşın."
+      ],
+      "featuresTitle": "Pergole çözümlerimiz",
+      "features": [
+        "Alüminyum pergole sistemleri",
+        "Ahşap görünüm pergole modelleri",
+        "Biyoklimatik / motorlu pergole",
+        "Teras ve bahçe uygulamaları"
+      ],
+      "ctaTitle": "Pergole İçin Teklif Alın",
+      "ctaDescription": "Teras veya bahçeniz için uygun pergole modelini birlikte belirleyelim; ücretsiz keşif ve fiyat teklifi sunalım.",
+      "ctaButton": "Teklif Formuna Git",
+      "relatedTitle": "İlgili Hizmetler",
+      "relatedSubtitle": "Dış mekân ve cephe çözümlerimizi de keşfedin."
     },
-    "ctaTitle": "Arsanız veya Projeniz İçin Teklif Alın",
-    "ctaDescription": "Keşif talebinizi iletin; kat karşılığı, kentsel dönüşüm veya anahtar teslim projeniz için net bir yol haritası çıkaralım.",
-    "ctaButton": "Teklif Formuna Git"
+    "pimapen": {
+      "sectionTag": "Hizmetlerimiz",
+      "h1": "Pimapen (PVC Pencere ve Kapı) Sistemleri",
+      "intro": "Isı yalıtımlı PVC pencere ve kapı sistemleriyle konforlu, enerji verimli yaşam alanları oluşturuyoruz.",
+      "body": [
+        "Pimapen olarak bilinen PVC pencere ve kapı sistemleri, ısı ve ses yalıtımı ile uzun ömürlü kullanım sunar. Efe İnşaat, Ataşehir ve İstanbul’da ölçüye özel pimapen imalatı ve profesyonel montaj gerçekleştirir.",
+        "Doğru bakım koşullarında kaliteli PVC pencere sistemleri uzun yıllar sorunsuz hizmet verebilir. Yeni montaj veya mevcut doğrama yenilemesi için ücretsiz keşif ve fiyat teklifi alabilirsiniz."
+      ],
+      "featuresTitle": "Pimapen çözümlerimiz",
+      "features": [
+        "PVC pencere sistemleri",
+        "PVC kapı uygulamaları",
+        "Isı ve ses yalıtımı odaklı seçimler",
+        "Değişim ve yenileme montajı"
+      ],
+      "ctaTitle": "Pimapen İçin Teklif Alın",
+      "ctaDescription": "Pencere ve kapı ihtiyaçlarınız için ücretsiz keşif yapalım; pimapen fiyatları ve modelleri hakkında net bilgi verelim.",
+      "ctaButton": "Teklif Formuna Git",
+      "relatedTitle": "İlgili Hizmetler",
+      "relatedSubtitle": "Cephe ve balkon sistemlerimizi de inceleyebilirsiniz."
+    },
+    "sineklik": {
+      "sectionTag": "Hizmetlerimiz",
+      "h1": "Sineklik Sistemleri",
+      "intro": "Pileli, sürme ve menteşeli sineklik sistemleriyle böceklerden korunurken havalandırmayı sürdürmenizi sağlıyoruz.",
+      "body": [
+        "Sineklik sistemleri pencere ve kapılarda konforlu havalandırma sunarken böcek girişini engeller. Efe İnşaat olarak pileli (plise), sürme ve menteşeli sineklik modellerinde ölçü alma ve montaj hizmeti veriyoruz.",
+        "Standart pencere sinekliklerinde ölçü ve montaj çoğu zaman aynı gün içinde tamamlanabilir. Kapı sineklikleri ve özel sistemlerde süre modele göre değişir. Fiyat ve montaj bilgisi için iletişime geçin."
+      ],
+      "featuresTitle": "Sineklik çözümlerimiz",
+      "features": [
+        "Pileli (plise) sineklik",
+        "Sürme sineklik sistemleri",
+        "Menteşeli sineklik modelleri",
+        "Pencere ve kapı uygulamaları"
+      ],
+      "ctaTitle": "Sineklik İçin Teklif Alın",
+      "ctaDescription": "Pencere veya kapı sinekliği ihtiyacınız için ücretsiz ölçü ve fiyat teklifi talep edin.",
+      "ctaButton": "Teklif Formuna Git",
+      "relatedTitle": "İlgili Hizmetler",
+      "relatedSubtitle": "Pimapen, cam balkon ve pergole çözümlerimizi de keşfedin."
+    }
   },
   "gallery": {
     "sectionTag": "Galeri",
@@ -306,6 +313,8 @@
       "submit": "Mesaj Gönder",
       "sending": "Gönderiliyor...",
       "success": "Mesajınız başarıyla gönderildi!",
+      "successTitle": "Mesajınız gönderildi",
+      "successBody": "Efe İnşaat ekibi en kısa sürede sizinle iletişime geçecektir.",
       "error": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
       "namePlaceholder": "Adınızı girin",
       "emailPlaceholder": "ornek@email.com",

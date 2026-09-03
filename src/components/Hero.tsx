@@ -6,10 +6,10 @@ import { ArrowDown, Mail, DoorOpen, GlassWater, Umbrella, Bug } from "lucide-rea
 import { useLanguage } from "@/context/LanguageContext";
 
 const categories = [
-  { key: "pimapen", icon: DoorOpen },
-  { key: "camBalkon", icon: GlassWater },
-  { key: "pergole", icon: Umbrella },
-  { key: "sineklik", icon: Bug },
+  { key: "pimapen", icon: DoorOpen, href: "/hizmetlerimiz/pimapen" },
+  { key: "camBalkon", icon: GlassWater, href: "/hizmetlerimiz/cam-balkon" },
+  { key: "pergole", icon: Umbrella, href: "/hizmetlerimiz/pergole" },
+  { key: "sineklik", icon: Bug, href: "/hizmetlerimiz/sineklik" },
 ];
 
 export default function Hero() {
@@ -47,14 +47,19 @@ export default function Hero() {
           transition={{ duration: 0.7, delay: 0.15 }}
           className="flex flex-wrap items-center justify-center gap-2 mb-9"
         >
-          {categories.map(({ key, icon: Icon }) => (
-            <span
+          {categories.map(({ key, icon: Icon, href }) => (
+            <a
               key={key}
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md border border-white/15 bg-white/[0.03] text-primary-200 text-xs sm:text-sm font-semibold uppercase tracking-wider"
+              href={href}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push(href);
+              }}
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md border border-white/15 bg-white/[0.03] text-primary-200 text-xs sm:text-sm font-semibold uppercase tracking-wider hover:border-primary-400/40 hover:bg-white/[0.06] transition-colors"
             >
               <Icon className="w-3.5 h-3.5" />
               {t(`hero.categories.${key}`) as string}
-            </span>
+            </a>
           ))}
         </motion.div>
 
@@ -71,14 +76,14 @@ export default function Hero() {
           </span>
         </motion.h1>
 
-        <motion.p
+        <motion.h2
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.55 }}
           className="text-lg sm:text-xl text-white/60 max-w-2xl mx-auto mb-12 font-light"
         >
           {t("hero.subtitle") as string}
-        </motion.p>
+        </motion.h2>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -87,7 +92,7 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <button
-            onClick={() => router.push("/hizmetlerimiz")}
+            onClick={() => router.push("/hizmetlerimiz/cam-balkon")}
             className="px-8 py-4 bg-primary-500 text-white font-semibold uppercase tracking-wide text-sm rounded-md hover:bg-primary-600 transition-all duration-200 shadow-lg shadow-black/30"
           >
             {t("hero.cta") as string}

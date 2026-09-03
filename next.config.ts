@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/hizmetlerimiz",
+        destination: "/hizmetlerimiz/cam-balkon",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

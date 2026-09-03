@@ -1,17 +1,6 @@
-"use client";
+import { permanentRedirect } from "next/navigation";
 
-import Navbar from "@/components/Navbar";
-import Services from "@/components/Services";
-import Footer from "@/components/Footer";
-
-export default function HizmetlerimizPage() {
-  return (
-    <>
-      <Navbar />
-      <main>
-        <Services />
-      </main>
-      <Footer />
-    </>
-  );
+/** Legacy single services URL → cam-balkon (also configured as 301 in next.config). */
+export default function HizmetlerimizIndexPage() {
+  permanentRedirect("/hizmetlerimiz/cam-balkon");
 }

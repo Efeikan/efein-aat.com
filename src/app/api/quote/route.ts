@@ -9,8 +9,8 @@ import {
 
 export const runtime = "nodejs";
 
-const SITE_URL = "https://xn--efeinaat-rwb.com";
-const SITE_DISPLAY = "efeinşaat.com";
+const SITE_URL = "https://efeinsaat.com";
+const SITE_DISPLAY = "efeinsaat.com";
 
 function buildQuoteEmailHtml(fields: Record<string, string>, fileName?: string) {
   const rows = [

@@ -74,7 +74,7 @@ export default function About() {
   const paragraphs = t("about.storyParagraphs") as string[];
 
   const goToQuoteForm = () => {
-    router.push("/hizmetlerimiz#teklif-formu");
+    router.push("/hizmetlerimiz/cam-balkon#teklif-formu");
   };
 
   return (

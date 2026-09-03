@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
-import { MapPin, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import { MapPin, Mail, Clock, Send, CheckCircle, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Contact() {
@@ -10,6 +10,7 @@ export default function Contact() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [submitted, setSubmitted] = useState(false);
+  const [toast, setToast] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
@@ -42,8 +43,10 @@ export default function Contact() {
         );
       }
       setSubmitted(true);
+      setToast(true);
       setFormData({ name: "", email: "", phone: "", message: "", website: "" });
       setTimeout(() => setSubmitted(false), 5000);
+      setTimeout(() => setToast(false), 5500);
     } catch (err: unknown) {
       setError(
         err instanceof Error
@@ -261,6 +264,32 @@ export default function Contact() {
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 16, scale: 0.96 }}
+            className="fixed bottom-6 left-1/2 z-[110] w-[min(92vw,420px)] -translate-x-1/2 rounded-2xl border border-primary-700/50 bg-[var(--bg-card)] px-5 py-4 shadow-2xl shadow-black/40"
+            role="status"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-900/40 text-primary-300">
+                <CheckCircle2 className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-[var(--text-primary)] mb-1">
+                  {t("contact.form.successTitle") as string}
+                </p>
+                <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                  {t("contact.form.successBody") as string}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

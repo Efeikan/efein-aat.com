@@ -7,9 +7,16 @@ import { useLanguage } from "@/context/LanguageContext";
 const navLinks = [
   { key: "home", href: "/#hero" },
   { key: "about", href: "/hakkimizda" },
-  { key: "services", href: "/hizmetlerimiz" },
+  { key: "services", href: "/hizmetlerimiz/cam-balkon" },
   { key: "gallery", href: "/#gallery" },
   { key: "contact", href: "/#contact" },
+];
+
+const serviceLinks = [
+  { slug: "cam-balkon", href: "/hizmetlerimiz/cam-balkon" },
+  { slug: "pergole", href: "/hizmetlerimiz/pergole" },
+  { slug: "pimapen", href: "/hizmetlerimiz/pimapen" },
+  { slug: "sineklik", href: "/hizmetlerimiz/sineklik" },
 ];
 
 export default function Footer() {
@@ -83,6 +90,22 @@ export default function Footer() {
                     className="text-white/50 hover:text-primary-300 transition-colors text-sm"
                   >
                     {t(`nav.${link.key}`) as string}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <ul className="mt-4 space-y-2 border-t border-white/10 pt-4">
+              {serviceLinks.map((link) => (
+                <li key={link.slug}>
+                  <a
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(link.href);
+                    }}
+                    className="text-white/40 hover:text-primary-300 transition-colors text-sm"
+                  >
+                    {t(`nav.serviceItems.${link.slug}`) as string}
                   </a>
                 </li>
               ))}
