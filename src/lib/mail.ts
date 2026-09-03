@@ -2,29 +2,77 @@
  * Cloudflare Workers uyumlu mail: yalnızca Resend HTTP API.
  * FormSubmit / SMTP yok.
  */
-import { domainToASCII } from "node:url";
 
+/** UI / imza için Türkçe karakterli görünen adres */
 export const DISPLAY_EMAIL = "info@efeinşaat.com";
+
+/** Resend’e giden gerçek adres (ASCII domain — doğrulanmış efeinsaat.com) */
+export const RESEND_EMAIL = "info@efeinsaat.com";
 
 export const CONTACT_EMAIL =
   process.env.CONTACT_EMAIL?.trim() || DISPLAY_EMAIL;
 
-/** Resend API yalnızca ASCII e-posta kabul eder; IDN domain punycode'a çevrilir. */
+/**
+ * Resend yalnızca ASCII e-posta / doğrulanmış domain kabul eder.
+ * efeinşaat.com (IDN) → efeinsaat.com (ASCII) olarak zorlanır.
+ */
 export function toAsciiEmail(email: string): string {
   const trimmed = email.trim();
   const at = trimmed.lastIndexOf("@");
   if (at <= 0) return trimmed;
+
   const local = trimmed.slice(0, at);
-  const domain = trimmed.slice(at + 1);
-  const asciiDomain = domainToASCII(domain);
-  return asciiDomain ? `${local}@${asciiDomain}` : trimmed;
+  let domain = trimmed.slice(at + 1).toLowerCase();
+
+  // Bilinen marka domain eşlemeleri
+  if (
+    domain === "efeinşaat.com" ||
+    domain === "xn--efeinaat-rwb.com"
+  ) {
+    domain = "efeinsaat.com";
+  } else {
+    try {
+      // hostname her zaman ASCII/punycode döner
+      domain = new URL(`http://${domain}`).hostname;
+    } catch {
+      // domain olduğu gibi kalır
+    }
+    if (domain === "xn--efeinaat-rwb.com") {
+      domain = "efeinsaat.com";
+    }
+  }
+
+  return `${local}@${domain}`;
+}
+
+/** From görünen adındaki Türkçe karakterleri Resend için ASCII’ye çevir. */
+function toAsciiDisplayName(name: string): string {
+  return name
+    .replace(/İ/g, "I")
+    .replace(/I/g, "I")
+    .replace(/ı/g, "i")
+    .replace(/Ş/g, "S")
+    .replace(/ş/g, "s")
+    .replace(/Ğ/g, "G")
+    .replace(/ğ/g, "g")
+    .replace(/Ü/g, "U")
+    .replace(/ü/g, "u")
+    .replace(/Ö/g, "O")
+    .replace(/ö/g, "o")
+    .replace(/Ç/g, "C")
+    .replace(/ç/g, "c")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\x20-\x7E]/g, "")
+    .trim() || "Efe Insaat";
 }
 
 function normalizeAddressForResend(address: string): string {
   const trimmed = address.trim();
   const angle = trimmed.match(/^(.+?)\s*<([^>]+)>$/);
   if (angle) {
-    return `${angle[1].trim()} <${toAsciiEmail(angle[2].trim())}>`;
+    const display = toAsciiDisplayName(angle[1]);
+    return `${display} <${toAsciiEmail(angle[2].trim())}>`;
   }
   return toAsciiEmail(trimmed);
 }
@@ -64,7 +112,7 @@ type CustomerConfirmation = {
 type SendMailOptions = {
   subject: string;
   html: string;
-  /** Varsayılan: CONTACT_EMAIL (info@efeinsaat.com) */
+  /** Varsayılan: CONTACT_EMAIL */
   to?: string;
   replyTo?: string;
   text?: string;
@@ -84,12 +132,15 @@ function logMail(level: "info" | "warn" | "error", message: string, extra?: unkn
 
 export function getMailEnvStatus() {
   const apiKey = process.env.RESEND_API_KEY?.trim() || "";
+  const fromRaw =
+    process.env.MAIL_FROM?.trim() ||
+    `Efe Insaat Form <${RESEND_EMAIL}>`;
   return {
     transport: "resend",
     contact: CONTACT_EMAIL,
-    from:
-      process.env.MAIL_FROM?.trim() ||
-      "Efe İnşaat Form <onboarding@resend.dev>",
+    contactNormalized: toAsciiEmail(CONTACT_EMAIL),
+    from: fromRaw,
+    fromNormalized: normalizeAddressForResend(fromRaw),
     hasResendKey: Boolean(apiKey),
     keyLength: apiKey.length,
     present: {
@@ -124,13 +175,14 @@ async function resendSend(payload: Record<string, unknown>) {
     );
   }
 
-  logMail("info", "Resend request", {
-    to: payload.to,
-    from: payload.from,
-    subject: payload.subject,
-  });
-
   const normalized = normalizeResendPayload(payload);
+
+  logMail("info", "Resend request", {
+    to: normalized.to,
+    from: normalized.from,
+    reply_to: normalized.reply_to,
+    subject: normalized.subject,
+  });
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -184,7 +236,7 @@ async function resendSend(payload: Record<string, unknown>) {
 export async function sendMail(options: SendMailOptions) {
   const from =
     process.env.MAIL_FROM?.trim() ||
-    "Efe İnşaat Form <onboarding@resend.dev>";
+    `Efe Insaat Form <${RESEND_EMAIL}>`;
 
   const to = options.to?.trim() || CONTACT_EMAIL;
 
@@ -212,7 +264,7 @@ export async function sendMail(options: SendMailOptions) {
 
   await resendSend(payload);
 
-  // Formu dolduran kullanıcıya teşekkür / onay maili (info@ üzerinden)
+  // Formu dolduran kullanıcıya teşekkür / onay maili
   if (options.customerConfirmation) {
     const c = options.customerConfirmation;
     await resendSend({
@@ -221,7 +273,7 @@ export async function sendMail(options: SendMailOptions) {
       subject: c.subject,
       html: c.html,
       text: c.text,
-      reply_to: DISPLAY_EMAIL,
+      reply_to: RESEND_EMAIL,
     });
   }
 }
